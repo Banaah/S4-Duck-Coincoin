@@ -4,6 +4,13 @@
 
 #include "merkleroot.h"
 
+int lesserPowOf2(int nb){
+	int val = 1;
+	while((val <<= 1 ) <= nb);
+	val >>= 1;
+	return val;
+}
+
 char *merkleRoot(char *transaction[TAILLE_TRANSACTION],int nb, int deb){
 	char *hash1 = malloc((SHA256_BLOCK_SIZE*2 + 1) * sizeof(char));
 	char *hash2 = malloc((SHA256_BLOCK_SIZE*2 + 1) * sizeof(char));
@@ -21,17 +28,16 @@ char *merkleRoot(char *transaction[TAILLE_TRANSACTION],int nb, int deb){
 		sha256ofString((BYTE *) concatenateHash, hashRes);
 	} else{
 		int t1, t2;
-		if (nb%2){
-			t2 = nb/2;
-			t1 = t2+1;
-		} else{
-			t1 = nb/2;
-			t2 = nb/2;
-		}
+		t1 = lesserPowOf2(nb);
+		t2 = nb-t1;
 		hash1 = merkleRoot(transaction, t1, deb);// = première partie de l'arbre
-		hash2 = merkleRoot(transaction, t2, deb+t1);// = deuxième partie de l'arbre
 		strcpy(concatenateHash, hash1);
-		strcat(concatenateHash, hash2);// Oui c'est possible de faire qu'avec 2 char*
+		if (t2) {
+			hash2 = merkleRoot(transaction, t2, deb + t1);// = deuxième partie de l'arbre
+			strcat(concatenateHash, hash2);// Oui c'est possible de faire qu'avec 2 char*
+		} else {
+			strcat(concatenateHash, hash1);
+		}
 		sha256ofString((BYTE *) concatenateHash, hashRes);
 	}
 	free(hash1);
