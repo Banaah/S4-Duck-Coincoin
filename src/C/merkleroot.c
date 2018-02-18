@@ -6,7 +6,7 @@
 
 int lesserPowOf2(int nb){
 	int val = 1;
-	while((val <<= 1 ) <= nb);
+	while((val <<= 1 ) < nb);
 	val >>= 1;
 	return val;
 }
