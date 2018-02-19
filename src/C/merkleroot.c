@@ -14,7 +14,7 @@ int lesserPowOf2(int nb){
 
 int greaterPowOf2(int nb){
 	int val = 1;
-	while((val <<= 1 ) <= nb);
+	while((val <<= 1 ) < nb);
 	return val;
 }
 
