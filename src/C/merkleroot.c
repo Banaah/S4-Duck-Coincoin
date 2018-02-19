@@ -66,7 +66,12 @@ char *merkleRoot2(char *transactions[TAILLE_TRANSACTION],int nb, int deb){
 			sha256ofString((BYTE *) transactions[1+deb], hash2);
 		}
 		strcpy(concatenateHash, hash1);
-		strcat(concatenateHash, hash2);// Oui c'est possible de faire qu'avec 2 char*
+		if (t2) {
+			hash2 = merkleRoot(transaction, t2, deb + t1);// = deuxième partie de l'arbre
+			strcat(concatenateHash, hash2);// Oui c'est possible de faire qu'avec 2 char*
+		} else {
+			strcat(concatenateHash, hash1);
+		}
 		sha256ofString((BYTE *) concatenateHash, hashRes);
 	} else{
 		int t = nb >> 1;
