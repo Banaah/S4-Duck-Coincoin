@@ -4,7 +4,7 @@
 #include "merkleroot.h"
 
 int main(){
-	char *tab[] = {"Source-Destination:1","Source-Destination:39","Source-Destination:25","Source-Destination:63","Source-Destination:7","Source-Destination:78","Source-Destination:24","Source-Destination:32","Source-Destination:72"};
-	printf("%s %s\n", getMerkleRoot(tab, 9), getMerkleRoot2(tab, 9));
+	char *tab[] = {	"genesis block" };
+	printf("%s \n56360bfb8218a44dd9943b4f7ea8a4ef80109e067c9d9da3dc7605be50126abb\n", getMerkleRoot(tab, 1));
 	return 0;
 }
