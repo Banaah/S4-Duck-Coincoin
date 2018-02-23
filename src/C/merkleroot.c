@@ -23,7 +23,7 @@ int lesserPowOf2(int nb){
  */
 int greaterPowOf2(int nb){
 	int val = 1;
-	while((val <<= 1 ) < nb);
+	while(nb!=1&&(val <<= 1 ) < nb);
 	return val;
 }
 
@@ -50,6 +50,11 @@ char *merkleRoot(char *transactions[], int nb, int deb){
 		if(concatenateHash != NULL) free(concatenateHash);
 		if(hashRes != NULL) free(hashRes);
 		return NULL;
+	}
+	
+	if (nb == 1){
+		sha256ofString((BYTE *) transactions[0], hashRes);
+		return hashRes;
 	}
 	
 	if (nb == 2){
@@ -79,21 +84,11 @@ char *merkleRoot(char *transactions[], int nb, int deb){
 	return hashRes;
 }
 
-char *getMerkleRootOld(char *transactions[TAILLE_TRANSACTION], int nb){
-	return merkleRoot(transactions, nb, 0);
-}
-
 /*
  * params : List of transaction, number of transaction
  * return : Hash root of the Merkle tree, NULL in case of errors
  */
-char *getMerkleRoot(char *transactions[TAILLE_TRANSACTION], int nb){
-	if (nb==1) {
-		char *hashRes = malloc((SHA256_BLOCK_SIZE*2 + 1) * sizeof(char));
-		sha256ofString((BYTE *) transactions[0], hashRes);
-		return hashRes;
-	}
-	
+char *getMerkleRoot(char *transactions[TAILLE_TRANSACTION], int nb){	
 	int taille = greaterPowOf2(nb);
 	if (taille != nb){
 		char *tab[taille];
@@ -110,7 +105,6 @@ char *getMerkleRoot(char *transactions[TAILLE_TRANSACTION], int nb){
 				tab[i] = transactions[nb-1];
 			}
 		}
-		return merkleRoot(tab, taille, 0);
 	}
-	return merkleRoot(transactions, nb, 0);
+	return merkleRoot(transactions, taille, 0);
 }
