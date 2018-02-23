@@ -4,8 +4,6 @@
 //
 
 #include "merkleroot.h"
-#include "sha256_utils.h"
-#include "sha256.h"
 
 /*
  * params : integer nb
@@ -105,6 +103,7 @@ char *getMerkleRoot(char *transactions[TAILLE_TRANSACTION], int nb){
 				tab[i] = transactions[nb-1];
 			}
 		}
+		return merkleRoot(tab, taille, 0);
 	}
 	return merkleRoot(transactions, taille, 0);
 }
