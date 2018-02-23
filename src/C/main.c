@@ -1,10 +1,15 @@
 #include <stdio.h>
-#include "sha256.h"
-#include "sha256_utils.h"
 #include "merkleroot.h"
+#include "blockchain.h"
 
 int main(){
-	char *tab[] = {	"genesis block" };
-	printf("%s \n56360bfb8218a44dd9943b4f7ea8a4ef80109e067c9d9da3dc7605be50126abb\n", getMerkleRoot(tab, 1));
+	char *tab[] = {	"Source-Destination:65",
+                       "Source-Destination:31",
+                       "Source-Destination:45",
+                       "Source-Destination:90",
+                       "Source-Destination:44",
+                       "Source-Destination:25" };
+	Block b = genBlock(0,6,tab,"");
+    printf("%s \ne63defa9107cbc64ba39aa4b48056ae0fe242d3aea23751ea61ec46097bbf973\n", getMerkleRootFromBlock(b));
 	return 0;
 }

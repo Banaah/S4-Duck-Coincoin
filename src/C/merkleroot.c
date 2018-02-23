@@ -7,16 +7,6 @@
 
 /*
  * params : integer nb
- * returns : power of 2 < nb
- */ 
-int lesserPowOf2(int nb){
-	int val = 1;
-	while((val <<= 1 ) < nb);
-	return val >> 1;
-}
-
-/*
- * params : integer nb
  * returns : power of 2 >= nb
  */
 int greaterPowOf2(int nb){
