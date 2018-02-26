@@ -21,7 +21,13 @@
 typedef struct etBlockChain *BlockChain;
 typedef struct etBlock *Block;
 
+BlockChain initBlockChain(int difficulte);
+void addBlockToBlockChain(BlockChain bc, Block b);
+Block getBlockFromBlockChain(BlockChain bc, int index);
+
+
 Block genBlock(int index, int nbTransactions, char **transactions, char *previousHash);
 char *getMerkleRootFromBlock(Block b);
+char *getTimeStampFromBlock(Block b);
 
 #endif //C_BLOCKCHAIN_H
