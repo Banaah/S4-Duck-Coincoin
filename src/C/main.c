@@ -3,6 +3,7 @@
 #include "blockchain.h"
 
 int main(){
+
     char hashRes[SHA256_BLOCK_SIZE*2 + 1];
 	char *tab[] = {	"Source-Destination:65",
                        "Source-Destination:31",
