@@ -8,10 +8,10 @@
 #include "sha256_utils.h"
 #include <stdlib.h>
 #include <memory.h>
+#include <stdio.h>
 
 #define TAILLE_TRANSACTION 10
 
-char *getMerkleRoot(char *transactions[], int nb);// transaction au pluriel ?
-char *getMerkleRoot2(char *transactions[], int nb);// transaction au pluriel ?
+char *getMerkleRoot(char *transactions[], int nb);
 
 #endif //C_MERKLEROOT_H

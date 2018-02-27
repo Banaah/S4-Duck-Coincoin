@@ -3,8 +3,17 @@
 // Edited by François Gaits on 19/02/2018.
 //
 
-#include <printf.h>
 #include "merkleroot.h"
+
+/*
+ * params : integer nb
+ * returns : power of 2 < nb
+ */ 
+int lesserPowOf2(int nb){
+	int val = 1;
+	while((val <<= 1 ) < nb);
+	return val >> 1;
+}
 
 /*
  * params : integer nb
@@ -15,7 +24,6 @@ int greaterPowOf2(int nb){
 	while(nb!=1&&(val <<= 1 ) < nb);
 	return val;
 }
-
 
 /*
  * params : List of transaction, number of transaction, start of the transaction list
@@ -74,7 +82,6 @@ char *merkleRoot(char *transactions[], int nb, int deb){
 	return hashRes;
 }
 
-
 /*
  * params : List of transaction, number of transaction
  * return : Hash root of the Merkle tree, NULL in case of errors
@@ -99,34 +106,4 @@ char *getMerkleRoot(char *transactions[TAILLE_TRANSACTION], int nb){
 		return merkleRoot(tab, taille, 0);
 	}
 	return merkleRoot(transactions, taille, 0);
-}
-
-char *getMerkleRoot2(char *transactions[TAILLE_TRANSACTION], int nb){
-	int taille = greaterPowOf2(nb);
-	if (taille != nb){
-		char *tab[taille];
-		int diff = taille-nb;
-		for (int i = 0; i < nb; ++i) {
-			tab[i] = transactions[i];
-		}
-		if (nb%2 == 0){
-			for (int i = nb; i < taille; i+=2) {
-				tab[i] = transactions[nb-2];
-				tab[i+1] = transactions[nb-1];
-			}
-		} else {
-			for (int i = nb; i < taille; ++i) {
-				tab[i] = transactions[nb-1];
-			}
-		}
-		/*for (int i = nb; i < diff; ++i) {
-			tab[i] = transactions[i-diff];
-		}*/
-		for (int i = 0; i < taille; ++i) {
-			printf("%s ", tab[i]);
-			printf("\n");
-		}
-		return merkleRoot2(tab, taille, 0);
-	}
-	return merkleRoot2(transactions, nb, 0);
 }
