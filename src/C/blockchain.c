@@ -10,7 +10,7 @@ typedef struct etBlock {
     int nbTransactions;
     //int nonce;   //TODO On verra plus tard
     char transactions[NB_MAX_TRANSACTION][TRANSACTION_SIZE + 1];
-    char timeStamp[TIMESTAMP_SIZE +1 ];
+    char timeStamp[TIMESTAMP_SIZE + 1];
     char previousHash[HASH_SIZE + 1];
     char merkleRoot[HASH_SIZE + 1];
     //char blockHash[HASH_SIZE + 1];    //TODO on hash kwa ?

@@ -6,14 +6,14 @@
 #define C_BLOCKCHAIN_H
 
 #define HASH_SIZE 256
-#define TIMESTAMP_SIZE 24
+#define TIMESTAMP_SIZE 25
 #define TRANSACTION_SIZE 22
 #define NB_MAX_TRANSACTION 100
 
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-#include <mem.h>
+#include <string.h>
 
 #include "merkleroot.h"
 #include "sha256_utils.h"
