@@ -112,7 +112,7 @@ void setBlockHash(Block b, int difficulte){
 		//TODO Faire la concaténations de champs quand on connaitra le format du blockhash
 		sha256ofString((BYTE *) blockPreHash, blockHash);
 		++nonce;
-	} while(isMiningFinished(blockHash, difficulte));
+	} while(!isMiningFinished(blockHash, difficulte));
 	strcpy(b->blockHash, blockHash);
 	b->nonce = --nonce;
 }

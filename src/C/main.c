@@ -3,7 +3,7 @@
 #include "blockchain.h"
 
 int main(){
-    char hashRes[SHA256_BLOCK_SIZE*2 + 1];
+    /*char hashRes[SHA256_BLOCK_SIZE*2 + 1];
 	char *tab[] = {	"Source-Destination:65",
                        "Source-Destination:31",
                        "Source-Destination:45",
@@ -16,6 +16,10 @@ int main(){
     addBlockToBlockChain(bc,b);
     printf("%s\n",getTimeStampFromBlock(getBlockFromBlockChain(bc,1)));
     printf("%s \ne63defa9107cbc64ba39aa4b48056ae0fe242d3aea23751ea61ec46097bbf973\n", getMerkleRootFromBlock(getBlockFromBlockChain(bc,1)));
-
+     */
+	char tab[] = "Jan 19, 2018 10:49:16 AM01genesis block56360bfb8218a44dd9943b4f7ea8a4ef80109e067c9d9da3dc7605be50126abb0";
+	char res[HASH_SIZE+1];
+	sha256ofString((BYTE *) tab, res);
+	printf("%s\n996e3af3152933e59a4a71257eb03499cd1940f157b235332a0271e42b908097\n", res);
 	return 0;
 }
