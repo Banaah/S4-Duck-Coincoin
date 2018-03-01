@@ -16,5 +16,6 @@ int main(){
     addBlockToBlockChain(bc,b);
     printf("%s\n",getTimeStampFromBlock(getBlockFromBlockChain(bc,1)));
     printf("%s \ne63defa9107cbc64ba39aa4b48056ae0fe242d3aea23751ea61ec46097bbf973\n", getMerkleRootFromBlock(getBlockFromBlockChain(bc,1)));
+
 	return 0;
 }
