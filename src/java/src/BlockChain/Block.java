@@ -22,7 +22,7 @@ public class Block {
         this.previousHash = previousHash;
         this.nbTransactions = nbTransactions;
         this.transactions = transactions;
-        this.blockHash = gethashedBlock(difficulte);//init aussi this.nonce
+        this.blockHash = getHashedBlock(difficulte);//init aussi this.nonce
         //TODO merkle root init
     }
 
@@ -33,7 +33,7 @@ public class Block {
         return true;
     }
 
-    private String gethashedBlock(int difficulte){
+    private String getHashedBlock(int difficulte){
         String input;
         String output;
 
@@ -45,6 +45,10 @@ public class Block {
         --this.nonce;
         return output;
     }
+
+
+
+    /* Tous les getter, pas de setter puisqu'un block ne peut pas être modifié sans modifié tous les suivant*/
 
     public Integer getIndex() {
         return index;
