@@ -1,6 +1,8 @@
 package BlockChain;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 import static ProjectUtils.HashUtil.applySha256;
 
@@ -22,8 +24,8 @@ public class Block {
         this.previousHash = previousHash;
         this.nbTransactions = nbTransactions;
         this.transactions = transactions;
-        this.blockHash = getHashedBlock(difficulte);//init aussi this.nonce
-        //TODO merkle root init
+        this.merkleRoot = new MerkleRoot(this.transactions).getRoot();
+        this.blockHash = this.getHashedBlock(difficulte);//init aussi this.nonce
     }
 
     private boolean isMiningFinished(String hash, int difficulte){
@@ -33,19 +35,28 @@ public class Block {
         return true;
     }
 
+    private String getTransactionsString() {
+        return Arrays.stream(this.transactions).collect(Collectors.joining(" "));
+    }
+
     private String getHashedBlock(int difficulte){
-        String input;
+        String input = this.index.toString() + this.previousHash + this.timeStamp + this.nbTransactions.toString() + this.getTransactionsString() + this.merkleRoot;
         String output;
 
         do{
-            input = "a";// Tous les champs.toString concaténé
-            output = applySha256(input);
+            output = applySha256(input + this.nonce.toString());
             ++this.nonce;
         }while(!isMiningFinished(output, difficulte));
         --this.nonce;
         return output;
     }
 
+    /*private String computeMerkleRoot(){
+        String out;
+
+        return out;
+    }
+    */
 
 
     /* Tous les getter, pas de setter puisqu'un block ne peut pas être modifié sans modifié tous les suivant*/
