@@ -1,4 +1,4 @@
-package ProjectUtils;
+package projectutils;
 import java.security.MessageDigest;
 
 public class HashUtil {

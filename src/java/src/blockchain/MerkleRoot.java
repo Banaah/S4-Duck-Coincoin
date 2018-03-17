@@ -1,16 +1,16 @@
-package BlockChain;
+package blockchain;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static ProjectUtils.HashUtil.applySha256;
+import static projectutils.HashUtil.applySha256;
 
-public class MerkleRoot {
+class MerkleRoot {
     private ArrayList<String> listePrep;
     private String root;
     private int nb;
 
-    public MerkleRoot(String transactions[]) {
+    MerkleRoot(String transactions[]) {
         this.root = "Null";
         int nb = transactions.length > 1 ? (Integer.highestOneBit(transactions.length - 1) << 1) : 1;
         this.nb = nb;
@@ -27,7 +27,7 @@ public class MerkleRoot {
                 }
             }
         }
-        System.out.println(this.listePrep + "\n" + this.nb + " " + this.listePrep.size());
+        //System.out.println(this.listePrep + "\n" + this.nb + " " + this.listePrep.size());
     }
 
     private String computeRoot(int nb, int deb) {
@@ -45,7 +45,7 @@ public class MerkleRoot {
         return this.root;
     }
 
-    public String getRoot() {
+    String getRoot() {
         if (this.root.equals("Null")) {
             this.root = this.computeRoot(this.nb, 0);
             return this.root;

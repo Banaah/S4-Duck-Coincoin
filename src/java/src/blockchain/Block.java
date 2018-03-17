@@ -1,18 +1,18 @@
-package BlockChain;
+package blockchain;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-import static ProjectUtils.HashUtil.applySha256;
+import static projectutils.HashUtil.applySha256;
 
 public class Block {
 
     private Integer index;
-    private String timeStamp;
     private String previousHash;
+    private String timeStamp;
     private Integer nbTransactions;
-    private String transactions[] = new String[this.nbTransactions];
+    private String transactions[];
     private String merkleRoot;
     private String blockHash;
     private Integer nonce;
@@ -25,6 +25,7 @@ public class Block {
         this.nbTransactions = nbTransactions;
         this.transactions = transactions;
         this.merkleRoot = new MerkleRoot(this.transactions).getRoot();
+        this.nonce = 0;
         this.blockHash = this.getHashedBlock(difficulte);//init aussi this.nonce
     }
 
@@ -42,7 +43,6 @@ public class Block {
     private String getHashedBlock(int difficulte){
         String input = this.index.toString() + this.previousHash + this.timeStamp + this.nbTransactions.toString() + this.getTransactionsString() + this.merkleRoot;
         String output;
-
         do{
             output = applySha256(input + this.nonce.toString());
             ++this.nonce;

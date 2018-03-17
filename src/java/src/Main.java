@@ -1,14 +1,16 @@
-import BlockChain.MerkleRoot;
+import blockchain.BlockChain;
+import projectutils.BCJsonUtil;
+import randomgen.TransactionsRdGen;
 
 public class Main {
-
     public static void main(String[] args) {
-        String t[] = {"Source-Destination:72",
-                "Source-Destination:57",
-                "Source-Destination:69",
-                "Source-Destination:42"
-        };
-        String m = new MerkleRoot(t).getRoot();
-        System.out.println(m + "\n" + "c076662f457fddff160e42bdc0b2bc199ca6c6e5064c4b133216393592a3d2aa");
+        BlockChain b = new BlockChain(4);
+        for (int i = 0; i < 5; i++) {
+            b.addBlock(TransactionsRdGen.getTransactionRdList());
+        }
+        BCJsonUtil.BCJsonWriter(b, "bc.json");
+        BlockChain b2 = BCJsonUtil.BCJsonReader("bc.json");
+        b2.addBlock(TransactionsRdGen.getTransactionRdList());
+        BCJsonUtil.BCJsonWriter(b2, "bc2.json");
     }
 }

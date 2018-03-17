@@ -1,4 +1,4 @@
-package RandomGen;
+package randomgen;
 import java.util.Random;
 
 public class TransactionsRdGen {
