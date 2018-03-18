@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GenRdBlockCGui {
+    BlockChain b;
+
     private JPanel Dcc;
     private JButton creer;
     private JPanel menu1;
@@ -18,7 +20,7 @@ public class GenRdBlockCGui {
     private JLabel labelnb;
     private JProgressBar creation;
 
-    public GenRdBlockCGui() {
+    GenRdBlockCGui() {
 
         creer.addActionListener(new ActionListener() {
             @Override
@@ -26,7 +28,8 @@ public class GenRdBlockCGui {
                 creation.setStringPainted(true);
                 creation.setMaximum((int) spinnernb.getValue());
                 BlockChain b = new BlockChain((int) spinnerdiff.getValue());
-                AddBlockWorker w = new AddBlockWorker(b, (int) spinnernb.getValue(), creation);
+                AddBlockWorker w = new AddBlockWorker(b, (int) spinnernb.getValue(), creation, "output.json");
+                //TODO Ajouter un champ de choix du fichier de sortie
                 w.execute();
                 creation.setValue(0);
             }
@@ -56,7 +59,7 @@ public class GenRdBlockCGui {
         });
     }
 
-    public JPanel getDcc() {
+    JPanel getDcc() {
         return Dcc;
     }
 }

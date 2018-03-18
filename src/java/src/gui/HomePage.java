@@ -14,6 +14,7 @@ public class HomePage {
     private JButton creerBouton;
     private JLabel chargerLabel;
     private JLabel creerLabel;
+    private JSeparator sep;
 
     public HomePage() {
         creerBouton.addActionListener(new ActionListener() {
@@ -29,7 +30,11 @@ public class HomePage {
         chargerBouton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO Ouvrir une popup de chargement de Json.
+                JFrame pop = new JFrame("Charger");
+                pop.setContentPane(new ChargerBlockC().getCharger());
+                pop.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                pop.pack();
+                pop.setVisible(true);
             }
         });
     }
