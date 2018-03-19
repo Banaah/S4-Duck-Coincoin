@@ -4,7 +4,7 @@
 
 int main(){
     char hashRes[SHA256_BLOCK_SIZE*2 + 1];
-	  char *tab[] = {	"Source-Destination:1",
+	char *tab[] = {	"Source-Destination:1",
 					   "Source-Destination:39",
 					   "Source-Destination:25",
 					   "Source-Destination:63",
@@ -13,12 +13,16 @@ int main(){
 					   "Source-Destination:24",
 					   "Source-Destination:32",
 					   "Source-Destination:72"
-	  };
+	};
 
-	BlockChain bc = initBlockChain(0);
-    Block b = genBlock(1,9,tab,"56360bfb8218a44dd9943b4f7ea8a4ef80109e067c9d9da3dc7605be50126abb", 4);
-    addBlockToBlockChain(bc,b);
+	BlockChain bc = initBlockChain(2);
+	addBlockToBlockChain(bc,tab,9);
+	addBlockToBlockChain(bc,tab,9);
+
     printf("%s\n",getTimeStampFromBlock(getBlockFromBlockChain(bc,1)));
+    printf("block hash 0: %s\n",getBlockHashFromBlock(getBlockFromBlockChain(bc,0)));
+    printf("block hash 1: %s\n",getBlockHashFromBlock(getBlockFromBlockChain(bc,1)));
+    printf("block hash 2: %s\n",getBlockHashFromBlock(getBlockFromBlockChain(bc,2)));
     printf("%s \n1f71d0159b9230a4da2287b18b568c242727f56fee9ee19a9ca13da3c6227240\n", getMerkleRootFromBlock(getBlockFromBlockChain(bc,1)));
 
 	/*char tab[] = "Jan 19, 2018 10:49:16 AM01genesis block56360bfb8218a44dd9943b4f7ea8a4ef80109e067c9d9da3dc7605be50126abb0";

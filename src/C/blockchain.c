@@ -8,12 +8,12 @@
 typedef struct etBlock {
 	int index;
 	int nbTransactions;
-	unsigned int nonce;   //TODO On verra plus tard
+	unsigned int nonce;
 	char transactions[NB_MAX_TRANSACTION][TRANSACTION_SIZE + 1];
 	char timeStamp[TIMESTAMP_SIZE + 1];
 	char previousHash[HASH_SIZE + 1];
 	char merkleRoot[HASH_SIZE + 1];
-	char blockHash[HASH_SIZE + 1];	//TODO on hash kwa ?
+	char blockHash[HASH_SIZE + 1];
 }* Block;
 
 typedef struct etBlockList {
@@ -36,12 +36,101 @@ char *genTimeStamp() {
 }
 
 /*
+ * Vérifie sur un hash de block vérifie la difficulté
+ */
+bool isMiningFinished(const char* hash, int difficulte){
+	for (int i = 0; i < difficulte; ++i) {
+		if (hash[i] != '0') return false;
+	}
+	return true;
+}
+
+/*
+ * Mine le contenu du Block jusqu'à ce qu'il valide la difficulté et set les valeurs dans le block
+ */
+void setBlockHash(Block b, int difficulte){
+	int i;
+	char blockHash[HASH_SIZE + 1];
+	char* blockPreHash = (char *) malloc(sizeof(char)*(3 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 7 + 1));
+	//On reserve la mémoire pour, dans l'ordre : l'index [0-999], le hash précédent, le timestamp, le nbTransaction [0-999], les transactions, la merkle root, la nonce [0-9 999 999], et le '/0'.
+	char* blockConcat = (char *) malloc(sizeof(char)*(3 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 1));
+	//La meme mais sans la nonce
+
+	char strIndex[3];
+	char strNbTransactions[3];
+	char strNonce[7];
+
+	if (sprintf(strIndex,"%d",b->index) < 0) {
+		perror("Erreur de conversion de l'index");
+		return;
+	}
+	if (sprintf(strNbTransactions,"%d",b->nbTransactions) < 0) {
+		perror("erreur de conversion du nombre de transactions");
+		return;
+	}
+
+	printf("DEBUG : \n\tindex : %s\n\tnbTransactions : %s\n",strIndex,strNbTransactions);
+
+	strcat(blockConcat,strIndex);
+	strcat(blockConcat,b->previousHash);
+	strcat(blockConcat,b->timeStamp);
+	strcat(blockConcat,strNbTransactions);
+	for(i=0;i<b->nbTransactions;++i) {
+		strcat(blockConcat,b->transactions[i]);
+	}
+	strcat(blockConcat,b->merkleRoot);
+
+	unsigned int nonce = 0;
+	do{
+		if (sprintf(strNonce,"%d",nonce) < 0) {
+			perror("erreur de conversion de la nonce");
+			return;
+		}
+		printf("DEBUG : \n\tnonce : %s\n",strNonce);
+
+		strcpy(blockPreHash,blockConcat);
+		strcat(blockPreHash,strNonce);
+
+		sha256ofString((BYTE *) blockPreHash, blockHash);
+		++nonce;
+	} while(!isMiningFinished(blockHash, difficulte));
+	strcpy(b->blockHash, blockHash);
+	b->nonce = --nonce;
+
+	free(blockPreHash);
+	free(blockConcat);
+}
+
+/*
+ * genere un Block (avec calcul de la merkle root)
+ */
+Block genBlock(int index, int nbTransactions, char **transactions, char *previousHash, int difficulte){
+	int i;
+	char* timeStamp = genTimeStamp();
+	char* merkleRoot = getMerkleRoot(transactions,nbTransactions);
+
+	Block b = (Block) malloc(sizeof(struct etBlock));
+	b->index = index;
+	b->nbTransactions = nbTransactions;
+	strcpy(b->previousHash,previousHash);
+
+	for(i=0;i<nbTransactions;++i)
+		strcpy(b->transactions[i],transactions[i]);
+
+	strcpy(b->timeStamp,timeStamp);
+	strcpy(b->merkleRoot,merkleRoot);
+	setBlockHash(b, difficulte);
+
+	return b;
+}
+
+/*
  * Initialise la struct interne BlockList avec le block genesis
  */
 BlockList initBlockList() {
 	BlockList bl = (BlockList) malloc(sizeof(struct etBlockList));
 	char *genesis[] = {"genesis block"};
-	bl->block = genBlock(0,1,genesis,"0", DIFFICULTY);
+	bl->block = genBlock(0,1,genesis,"0", 0);
 	bl->next = NULL;
 	return bl;
 }
@@ -69,14 +158,7 @@ BlockChain initBlockChain(int difficulte) {
 
 	return bc;
 }
-/*
- * Ajoute un block à la blockChain
- */
-void addBlockToBlockChain(BlockChain bc, Block b) {
-	bc->lastBlockList->next = genBlockList(b);
-	bc->lastBlockList = bc->lastBlockList->next;
-	++bc->nbBlocks;
-}
+
 
 /*
  * renvoie le block correspondant à l'index dans la BlockChain
@@ -92,53 +174,16 @@ Block getBlockFromBlockChain(BlockChain bc, int index) {
 }
 
 /*
- * Vérifie sur un hash de block vérifie la difficulté
+ * Genere et rajoute un block à la blockchain
  */
-bool isMiningFinished(char* hash, int difficulte){
-	for (int i = 0; i < difficulte; ++i) {
-		if (hash[i] != '0') return false;
-	}
-	return true;
+void addBlockToBlockChain(BlockChain bc, char** transactions, int nbTransactions) {
+	Block b = genBlock(bc->nbBlocks,nbTransactions,transactions,bc->lastBlockList->block->blockHash,bc->difficulte);
+
+	bc->lastBlockList->next = genBlockList(b);
+	bc->lastBlockList = bc->lastBlockList->next;
+	++bc->nbBlocks;
 }
 
-/*
- * Mine le contenue du Block jusqu'à ce qu'il valide la difficulté et set les valeurs dans le block
- */
-void setBlockHash(Block b, int difficulte){
-	char blockHash[HASH_SIZE + 1];
-	char blockPreHash[TAILLE_BLOCK_PREHASH];
-	unsigned int nonce = 0;
-	do{// Minning du block
-		//TODO Faire la concaténations de champs quand on connaitra le format du blockhash
-		sha256ofString((BYTE *) blockPreHash, blockHash);
-		++nonce;
-	} while(!isMiningFinished(blockHash, difficulte));
-	strcpy(b->blockHash, blockHash);
-	b->nonce = --nonce;
-}
-
-/*
- * genere un Block (avec calcul de la merkle root)
- */
-Block genBlock(int index, int nbTransactions, char **transactions, char *previousHash, int difficulte){ //TODO ajouter difficulté, calcul de la nonce, du hash (?)
-	int i;
-	char* timeStamp = genTimeStamp();
-	char* merkleRoot = getMerkleRoot(transactions,nbTransactions);
-
-	Block b = (Block) malloc(sizeof(struct etBlock));
-	b->index = index;
-	b->nbTransactions = nbTransactions;
-	strcpy(b->previousHash,previousHash);
-
-	for(i=0;i<nbTransactions;++i)
-		strcpy(b->transactions[i],transactions[i]);
-
-	strcpy(b->timeStamp,timeStamp);
-	strcpy(b->merkleRoot,merkleRoot);
-	//setBlockHash(b, difficulte);// en commentaire tant qu'on sais pas comment faire un block hash
-
-	return b;
-}
 
 /*
  * accesseur lecture de b->merkleRoot;
@@ -152,3 +197,9 @@ char *getMerkleRootFromBlock(Block b) {
 char *getTimeStampFromBlock(Block b) {
 	return b->timeStamp;
 }
+/*
+ * accesseur lecture de b->blockHash
+ */
+char *getBlockHashFromBlock(Block b) {
+	return b->blockHash;
+};

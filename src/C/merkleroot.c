@@ -3,7 +3,6 @@
 // Edited by François Gaits on 19/02/2018.
 //
 
-#include <printf.h>
 #include "merkleroot.h"
 
 /*
@@ -15,7 +14,6 @@ int greaterPowOf2(int nb){
 	while(nb!=1&&(val <<= 1 ) < nb);
 	return val;
 }
-
 
 /*
  * params : List of transaction, number of transaction, start of the transaction list
@@ -77,7 +75,7 @@ char *merkleRoot(char *transactions[], int nb, int deb){
  * params : List of transaction, number of transaction
  * return : Hash root of the Merkle tree, NULL in case of errors
  */
-char *getMerkleRoot(char *transactions[TAILLE_TRANSACTION], int nb){	
+char *getMerkleRoot(char *transactions[TRANSACTION_SIZE], int nb){
 	int taille = greaterPowOf2(nb);
 	if (taille != nb){
 		char *tab[taille];

@@ -9,9 +9,6 @@
 #define TIMESTAMP_SIZE 25
 #define TRANSACTION_SIZE 22
 #define NB_MAX_TRANSACTION 100
-#define TAILLE_BLOCK_PREHASH 200
-
-#define DIFFICULTY 4
 
 #include <stdio.h>
 #include <time.h>
@@ -26,11 +23,11 @@ typedef struct etBlockChain *BlockChain;
 typedef struct etBlock *Block;
 
 BlockChain initBlockChain(int difficulte);
-void addBlockToBlockChain(BlockChain bc, Block b);
+
+void addBlockToBlockChain(BlockChain bc, char** transactions, int nbTransactions);
 Block getBlockFromBlockChain(BlockChain bc, int index);
 
-
-Block genBlock(int index, int nbTransactions, char **transactions, char *previousHash, int difficulte);
+char *getBlockHashFromBlock(Block b);
 char *getMerkleRootFromBlock(Block b);
 char *getTimeStampFromBlock(Block b);
 
