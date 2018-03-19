@@ -4,7 +4,7 @@
 
 int main(){
     char hashRes[SHA256_BLOCK_SIZE*2 + 1];
-	char *tab[] = {	"Source-Destination:1",
+	  char *tab[] = {	"Source-Destination:1",
 					   "Source-Destination:39",
 					   "Source-Destination:25",
 					   "Source-Destination:63",
@@ -13,7 +13,7 @@ int main(){
 					   "Source-Destination:24",
 					   "Source-Destination:32",
 					   "Source-Destination:72"
-	};
+	  };
 
 	BlockChain bc = initBlockChain(0);
     Block b = genBlock(1,9,tab,"56360bfb8218a44dd9943b4f7ea8a4ef80109e067c9d9da3dc7605be50126abb", 4);
