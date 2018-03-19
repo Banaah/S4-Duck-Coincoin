@@ -31,4 +31,7 @@ char *getBlockHashFromBlock(Block b);
 char *getMerkleRootFromBlock(Block b);
 char *getTimeStampFromBlock(Block b);
 
+bool isBlockValid (Block b);
+bool isBlockChainValid(BlockChain bc);
+
 #endif //C_BLOCKCHAIN_H

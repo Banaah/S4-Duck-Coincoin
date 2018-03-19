@@ -69,9 +69,9 @@ void setBlockHash(Block b, int difficulte){
 		return;
 	}
 
-	printf("DEBUG : \n\tindex : %s\n\tnbTransactions : %s\n",strIndex,strNbTransactions);
+	printf("DEBUG : \n\tindex : %s\n\tnbTransactions : %s\n",strIndex,strNbTransactions); // DEBUG
 
-	strcat(blockConcat,strIndex);
+	strcpy(blockConcat,strIndex);
 	strcat(blockConcat,b->previousHash);
 	strcat(blockConcat,b->timeStamp);
 	strcat(blockConcat,strNbTransactions);
@@ -86,7 +86,8 @@ void setBlockHash(Block b, int difficulte){
 			perror("erreur de conversion de la nonce");
 			return;
 		}
-		printf("DEBUG : \n\tnonce : %s\n",strNonce);
+
+		// printf("DEBUG : \n\tnonce : %s\n",strNonce); DEBUG
 
 		strcpy(blockPreHash,blockConcat);
 		strcat(blockPreHash,strNonce);
@@ -97,8 +98,65 @@ void setBlockHash(Block b, int difficulte){
 	strcpy(b->blockHash, blockHash);
 	b->nonce = --nonce;
 
+	//printf("DEBUG :\n\t%s\n",blockPreHash);
+
 	free(blockPreHash);
 	free(blockConcat);
+}
+
+bool isBlockValid (Block b) {
+	int i;
+
+	char* blockPreHash = (char *) malloc(sizeof(char)*(3 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 7 + 1));
+	char blockHash[HASH_SIZE + 1];
+
+	char strIndex[3];
+	char strNbTransactions[3];
+	char strNonce[7];
+
+	if (sprintf(strIndex,"%d",b->index) < 0) {
+		perror("Erreur de conversion de l'index");
+		return false;
+	}
+	if (sprintf(strNbTransactions,"%d",b->nbTransactions) < 0) {
+		perror("erreur de conversion du nombre de transactions");
+		return false;
+	}
+	if (sprintf(strNonce,"%d",b->nonce) < 0) {
+		perror("erreur de conversion de la nonce");
+		return false;
+	}
+
+	strcpy(blockPreHash,strIndex);
+	strcat(blockPreHash,b->previousHash);
+	strcat(blockPreHash,b->timeStamp);
+	strcat(blockPreHash,strNbTransactions);
+	for(i=0;i<b->nbTransactions;++i) {
+		strcat(blockPreHash,b->transactions[i]);
+	}
+	strcat(blockPreHash,b->merkleRoot);
+	strcat(blockPreHash,strNonce);
+
+	//printf("DEBUG valid :\n\t%s\n",blockPreHash);
+
+	sha256ofString((BYTE *)blockPreHash,blockHash);
+
+	free(blockPreHash);
+
+	return strcmp(b->blockHash,blockHash) == 0;
+}
+
+bool isBlockChainValid(BlockChain bc) {
+	int i;
+	BlockList bl = bc->blockList;
+	for(i=0;i<bc->nbBlocks;++i) {
+		if(!isBlockValid(bl->block)) {
+			printf("Block n%d invalide\n",i);
+			return false;
+		}
+		bl = bl->next;
+	}
+	return true;
 }
 
 /*
