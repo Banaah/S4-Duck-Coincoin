@@ -18,9 +18,13 @@
 
 #include "merkleroot.h"
 #include "sha256_utils.h"
+#include "randomgen/generate_transactions.h"
 
 typedef struct etBlockChain *BlockChain;
 typedef struct etBlock *Block;
+
+BlockChain genCompleteRandomBlockChain(int difficulte, int nbBlocks);
+
 
 BlockChain initBlockChain(int difficulte);
 
@@ -33,5 +37,8 @@ char *getTimeStampFromBlock(Block b);
 
 bool isBlockValid (Block b);
 bool isBlockChainValid(BlockChain bc);
+
+void afficherBlock(Block b);
+void afficherBlockChain(BlockChain bc);
 
 #endif //C_BLOCKCHAIN_H

@@ -6,10 +6,11 @@
 #define C_GENERATE_TRANSACTIONS_H
 
 #define TRANSACTION_SIZE 22
-#define NB_MAX_TRANSACTION 100
+#define NB_MAX_TRANSACTION 3
 
 #include <time.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 char **generateRandomTransactionsList(int *nb);
 

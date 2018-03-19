@@ -69,7 +69,7 @@ void setBlockHash(Block b, int difficulte){
 		return;
 	}
 
-	printf("DEBUG : \n\tindex : %s\n\tnbTransactions : %s\n",strIndex,strNbTransactions); // DEBUG
+	//printf("DEBUG : \n\tindex : %s\n\tnbTransactions : %s\n",strIndex,strNbTransactions); // DEBUG
 
 	strcpy(blockConcat,strIndex);
 	strcat(blockConcat,b->previousHash);
@@ -242,6 +242,38 @@ void addBlockToBlockChain(BlockChain bc, char** transactions, int nbTransactions
 	++bc->nbBlocks;
 }
 
+void afficherBlock(Block b) {
+	int i = 0;
+
+	printf("Block n%d : \n\tNombre de transactions : %d\n\tTransactions :\n",b->index,b->nbTransactions);
+	for(i=0;i<b->nbTransactions;++i){
+		printf("\t\t%s\n",b->transactions[i]);
+	}
+	printf("\tTimestamp : %s\tHash precedent : %s\n\tMerkle root : %s\n\tNonce : %d\n\tHash du block : %s\n",b->timeStamp,b->previousHash,b->merkleRoot,b->nonce,b->blockHash);
+}
+
+void afficherBlockChain(BlockChain bc) {
+	int i;
+	BlockList bl = bc->blockList;
+	for(i=0;i<bc->nbBlocks;++i) {
+		afficherBlock(bl->block);
+		printf("\n");
+		bl = bl->next;
+	}
+}
+
+BlockChain genCompleteRandomBlockChain(int difficulte, int nbBlocks) {
+	int i;
+	int nbTransactions;
+	char **transactions;
+
+	BlockChain bc = initBlockChain(difficulte);
+	for (i = 0; i < nbBlocks; ++i) {
+		transactions = generateRandomTransactionsList(&nbTransactions);
+		addBlockToBlockChain(bc, transactions, nbTransactions);
+	}
+	return bc;
+}
 
 /*
  * accesseur lecture de b->merkleRoot;
