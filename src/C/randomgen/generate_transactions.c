@@ -21,8 +21,8 @@ char **generateRandomTransactionsList(int *nb){
 		 * en gros si on génère 3 et 10 ça donne :   Source-Destination:3
 		 * et 2 et 5 donnent :						 Source-Destination:25
 		 */
-		transactions[i][19] = (char) (rand() % 9) + '1';// NOLINT
-		transactions[i][20] = (a =(char) (rand() % 11)) == 10 ? 0 : a + '0';// NOLINT
+		transactions[i][19] = (char) ((char) (rand() % 9) + '1');// NOLINT
+		transactions[i][20] = (char) ((a =(char) (rand() % 11)) == 10 ? 0 : a + '0');// NOLINT
 		transactions[i][21] = 0;
 	}
 	*nb = taille;
