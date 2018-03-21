@@ -6,7 +6,7 @@
 #define C_GENERATE_TRANSACTIONS_H
 
 #define TRANSACTION_SIZE 22
-#define NB_MAX_TRANSACTION 3
+#define NB_MAX_TRANSACTION 100
 
 #include <time.h>
 #include <stdlib.h>
