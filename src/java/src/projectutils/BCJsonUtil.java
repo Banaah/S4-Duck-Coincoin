@@ -2,6 +2,9 @@ package projectutils;
 
 import blockchain.BlockChain;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -34,14 +37,16 @@ public class BCJsonUtil {
     public static void BCJsonWriter(BlockChain BlockC, String filename){
         // JSON Parser
         //1. Convert object to JSON string
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonParser jp = new JsonParser();
         String json = gson.toJson(BlockC);
-        System.out.println(json);
+        JsonElement je = jp.parse(json);
+        System.out.println(je);
 
         //2. Convert object to JSON string and save into a file directly
         try (FileWriter writer = new FileWriter(filename)) {
 
-            gson.toJson(BlockC, writer);
+            gson.toJson(je, writer);
 
         } catch (IOException e) {
             e.printStackTrace();

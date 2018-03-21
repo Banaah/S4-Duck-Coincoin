@@ -14,7 +14,7 @@ public class AddBlockWorker extends SwingWorker<BlockChain, Integer> {
     private boolean write;
     private String path;
 
-    public AddBlockWorker(BlockChain b, int nbBlock, JProgressBar jp, String path) {
+    AddBlockWorker(BlockChain b, int nbBlock, JProgressBar jp, String path) {
         this.b = b;
         this.nbBlock = nbBlock;
         this.jp = jp;
