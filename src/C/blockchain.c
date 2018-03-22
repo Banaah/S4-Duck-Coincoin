@@ -92,7 +92,6 @@ void setBlockHash(Block b, int difficulte){
 
 		// printf("DEBUG : \n\tnonce : %s\n",strNonce); DEBUG
 
-		//strcpy(blockPreHash,blockConcat);
 		blockConcat[taille] = (char) 0;
 		strcat(blockConcat,strNonce);
 
@@ -102,9 +101,8 @@ void setBlockHash(Block b, int difficulte){
 	strcpy(b->blockHash, blockHash);
 	b->nonce = --nonce;
 
-	printf("DEBUG :\n\t%s\n",blockConcat);
+	//printf("DEBUG :\n\t%s\n",blockConcat);
 
-	//free(blockPreHash);
 	free(blockConcat);
 }
 
@@ -166,21 +164,26 @@ bool isBlockChainValid(BlockChain bc) {
 /*
  * genere un Block (avec calcul de la merkle root)
  */
-Block genBlock(int index, int nbTransactions, char **transactions, char *previousHash, int difficulte){
+Block genBlock(int index, int nbTransactions, char **transactions, char *previousHash, int difficulte) {
 	int i;
-	char* timeStamp = genTimeStamp();
-	char* merkleRoot = getMerkleRoot(transactions,nbTransactions);
+	char *timeStamp = genTimeStamp();
+	char *merkleRoot = getMerkleRoot(transactions, nbTransactions);
 
 	Block b = (Block) malloc(sizeof(struct etBlock));
 	b->index = index;
 	b->nbTransactions = nbTransactions;
-	strcpy(b->previousHash,previousHash);
+	strcpy(b->previousHash, previousHash);
 
-	for(i=0;i<nbTransactions;++i)
-		strcpy(b->transactions[i],transactions[i]);
+	for (i = 0; i < nbTransactions; ++i) {
+		strcpy(b->transactions[i], transactions[i]);
+		free(transactions[i]);
+	}
+	free(transactions);
 
 	strcpy(b->timeStamp,timeStamp);
+	// free(timeStamp);		TODO	-> fait planter, faudrait regarder l'implémentation de ctime()
 	strcpy(b->merkleRoot,merkleRoot);
+	free(merkleRoot);
 	setBlockHash(b, difficulte);
 
 	return b;
