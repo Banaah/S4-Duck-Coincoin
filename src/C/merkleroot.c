@@ -39,18 +39,18 @@ char *merkleRoot(char *transactions[], int nb, int deb){
 		if(hashRes != NULL) free(hashRes);
 		return NULL;
 	}
-	
+
 	if (nb == 1){
 		sha256ofString((BYTE *) transactions[0], hashRes);
 		return hashRes;
 	}
-	
+
 	if (nb == 2){
 		sha256ofString((BYTE *) transactions[0+deb], hash1);
-		sha256ofString((BYTE *) transactions[1+deb], hash2);		
+		sha256ofString((BYTE *) transactions[1+deb], hash2);
 		strcpy(concatenateHash, hash1);
 		strcat(concatenateHash, hash2);
-	} else if (nb > 3) {	
+	} else if (nb > 3) {
 		int t = nb >> 1;
 		hash1 = merkleRoot(transactions, t, deb);// = première partie de l'arbre
 		strcpy(concatenateHash, hash1);
@@ -65,7 +65,7 @@ char *merkleRoot(char *transactions[], int nb, int deb){
 		return NULL;
 	}
 	sha256ofString((BYTE *) concatenateHash, hashRes);
-	
+
 	free(hash1);
 	free(hash2);
 	free(concatenateHash);
