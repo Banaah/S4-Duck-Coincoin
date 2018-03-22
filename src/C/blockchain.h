@@ -41,4 +41,6 @@ bool isBlockChainValid(BlockChain bc);
 void afficherBlock(Block b);
 void afficherBlockChain(BlockChain bc);
 
+void freeBlockChain(BlockChain bc);
+
 #endif //C_BLOCKCHAIN_H

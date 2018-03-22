@@ -275,6 +275,36 @@ BlockChain genCompleteRandomBlockChain(int difficulte, int nbBlocks) {
 	return bc;
 }
 
+void freeBlock(Block b) {
+	int i;
+	for(i=0;i<b->nbTransactions;++i) {
+		free(b->transactions[i]);
+	}
+	free(b->transactions);
+	free(b->timeStamp);
+	free(b->previousHash);
+	free(b->merkleRoot);
+	free(b->blockHash);
+	free(b);
+}
+
+void freeBlockChain(BlockChain bc) {
+	BlockList bl = bc->blockList;
+	BlockList freeBl;
+	int i = 0;
+
+	while(i<bc->nbBlocks){
+		freeBl = bl;
+		bl = bl->next;
+
+		freeBlock(freeBl->block);
+		free(freeBl);
+
+		++i;
+	}
+	free(bc);
+}
+
 /*
  * accesseur lecture de b->merkleRoot;
  */
