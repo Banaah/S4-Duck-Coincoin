@@ -4,7 +4,7 @@
 
 int main(){
 
-	BlockChain bc = genCompleteRandomBlockChain(3,5);
+	BlockChain bc = genCompleteRandomBlockChain(4,10);
 	afficherBlockChain(bc);
 
 /*
