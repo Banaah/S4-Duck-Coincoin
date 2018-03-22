@@ -50,10 +50,11 @@ bool isMiningFinished(const char* hash, int difficulte){
  */
 void setBlockHash(Block b, int difficulte){
 	int i;
+	int tailleConcat = 3 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 7;
 	char blockHash[HASH_SIZE + 1];
-	char* blockPreHash = (char *) malloc(sizeof(char)*(3 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 7 + 1));
+	//char* blockPreHash = (char *) malloc(sizeof(char)*(tailleConcat + 1));
 	//On reserve la mémoire pour, dans l'ordre : l'index [0-999], le hash précédent, le timestamp, le nbTransaction [0-999], les transactions, la merkle root, la nonce [0-9 999 999], et le '/0'.
-	char* blockConcat = (char *) malloc(sizeof(char)*(3 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 1));
+	char* blockConcat = (char *) malloc(sizeof(char)*(tailleConcat + 1));
 	//La meme mais sans la nonce
 
 	char strIndex[3];
@@ -80,6 +81,8 @@ void setBlockHash(Block b, int difficulte){
 	}
 	strcat(blockConcat,b->merkleRoot);
 
+	int taille = strlen(blockConcat);
+
 	unsigned int nonce = 0;
 	do{
 		if (sprintf(strNonce,"%d",nonce) < 0) {
@@ -89,18 +92,19 @@ void setBlockHash(Block b, int difficulte){
 
 		// printf("DEBUG : \n\tnonce : %s\n",strNonce); DEBUG
 
-		strcpy(blockPreHash,blockConcat);
-		strcat(blockPreHash,strNonce);
+		//strcpy(blockPreHash,blockConcat);
+		blockConcat[taille] = (char) 0;
+		strcat(blockConcat,strNonce);
 
-		sha256ofString((BYTE *) blockPreHash, blockHash);
+		sha256ofString((BYTE *) blockConcat, blockHash);
 		++nonce;
 	} while(!isMiningFinished(blockHash, difficulte));
 	strcpy(b->blockHash, blockHash);
 	b->nonce = --nonce;
 
-	//printf("DEBUG :\n\t%s\n",blockPreHash);
+	printf("DEBUG :\n\t%s\n",blockConcat);
 
-	free(blockPreHash);
+	//free(blockPreHash);
 	free(blockConcat);
 }
 
