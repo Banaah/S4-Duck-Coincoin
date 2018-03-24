@@ -7,25 +7,36 @@ import randomgen.TransactionsRdGen;
 import javax.swing.*;
 import java.util.List;
 
-public class AddBlockWorker extends SwingWorker<Void, Integer> {
+public class AddBlockWorker extends SwingWorker<BlockChain, Integer> {
     private BlockChain b;
     private int nbBlock;
     private JProgressBar jp;
+    private boolean write;
+    private String path;
+
+    AddBlockWorker(BlockChain b, int nbBlock, JProgressBar jp, String path) {
+        this.b = b;
+        this.nbBlock = nbBlock;
+        this.jp = jp;
+        this.write = true;
+        this.path = path;
+    }
 
     AddBlockWorker(BlockChain b, int nbBlock, JProgressBar jp) {
         this.b = b;
         this.nbBlock = nbBlock;
         this.jp = jp;
+        this.write = false;
     }
 
+
     @Override
-    protected Void doInBackground() throws Exception {
+    protected BlockChain doInBackground() throws Exception {
         for (int i = 0; i < nbBlock; i++) {
             b.addBlock(TransactionsRdGen.getTransactionRdList());
             publish(i);
         }
-        BCJsonUtil.BCJsonWriter(b, "testfen.json");
-        return null;
+        return b;
     }
 
     @Override
@@ -37,7 +48,10 @@ public class AddBlockWorker extends SwingWorker<Void, Integer> {
 
     @Override
     protected void done() {
+        jp.setValue(jp.getValue() + 1);
+        if (write) BCJsonUtil.BCJsonWriter(b, path);
         jp.setValue(0);
         jp.setStringPainted(false);
+
     }
 }

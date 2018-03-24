@@ -70,6 +70,7 @@ char *merkleRoot(char *transactions[], int nb, int deb){
 	free(concatenateHash);
 	return hashRes;
 }
+
 /*
  * params : List of transaction, number of transaction
  * return : Hash root of the Merkle tree, NULL in case of errors

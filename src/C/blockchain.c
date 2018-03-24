@@ -8,7 +8,7 @@
 typedef struct etBlock {
 	int index;
 	int nbTransactions;
-	unsigned int nonce;
+	unsigned int nonce;   //TODO On verra plus tard
 	char transactions[NB_MAX_TRANSACTION][TRANSACTION_SIZE + 1];
 	char timeStamp[TIMESTAMP_SIZE + 1];
 	char previousHash[HASH_SIZE + 1];
@@ -239,6 +239,7 @@ Block getBlockFromBlockChain(BlockChain bc, int index) {
 /*
  * Genere et rajoute un block à la blockchain
  */
+
 void addBlockToBlockChain(BlockChain bc, char** transactions, int nbTransactions) {
 	Block b = genBlock(bc->nbBlocks,nbTransactions,transactions,bc->lastBlockList->block->blockHash,bc->difficulte);
 

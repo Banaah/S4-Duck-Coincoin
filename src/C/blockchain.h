@@ -9,6 +9,9 @@
 #define TIMESTAMP_SIZE 25
 #define TRANSACTION_SIZE 22
 #define NB_MAX_TRANSACTION 100
+#define TAILLE_BLOCK_PREHASH 200
+
+#define DIFFICULTY 4
 
 #include <stdio.h>
 #include <time.h>
