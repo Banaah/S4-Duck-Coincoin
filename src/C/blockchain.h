@@ -21,17 +21,29 @@
 
 #include "merkleroot.h"
 #include "sha256_utils.h"
+#include "randomgen/generate_transactions.h"
 
 typedef struct etBlockChain *BlockChain;
 typedef struct etBlock *Block;
 
+BlockChain genCompleteRandomBlockChain(int difficulte, int nbBlocks);
+
+
 BlockChain initBlockChain(int difficulte);
-void addBlockToBlockChain(BlockChain bc, Block b);
+
+void addBlockToBlockChain(BlockChain bc, char** transactions, int nbTransactions);
 Block getBlockFromBlockChain(BlockChain bc, int index);
 
-
-Block genBlock(int index, int nbTransactions, char **transactions, char *previousHash, int difficulte);
+char *getBlockHashFromBlock(Block b);
 char *getMerkleRootFromBlock(Block b);
 char *getTimeStampFromBlock(Block b);
+
+bool isBlockValid (Block b);
+bool isBlockChainValid(BlockChain bc);
+
+void afficherBlock(Block b);
+void afficherBlockChain(BlockChain bc);
+
+void freeBlockChain(BlockChain bc);
 
 #endif //C_BLOCKCHAIN_H

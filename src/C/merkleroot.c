@@ -3,7 +3,6 @@
 // Edited by François Gaits on 19/02/2018.
 //
 
-#include <printf.h>
 #include "merkleroot.h"
 
 /*
@@ -16,7 +15,6 @@ int greaterPowOf2(int nb){
 	return val;
 }
 
-
 /*
  * params : List of transaction, number of transaction, start of the transaction list
  * return : Hash root of the Merkle tree, NULL in case of errors
@@ -28,31 +26,32 @@ char *merkleRoot(char *transactions[], int nb, int deb){
 		return NULL;
 	}
 
-	char *hash1 = malloc((SHA256_BLOCK_SIZE*2 + 1) * sizeof(char));
-	char *hash2 = malloc((SHA256_BLOCK_SIZE*2 + 1) * sizeof(char));
+	char *hash1 = NULL;
+	char *hash2 = NULL;
 	char *concatenateHash = malloc((SHA256_BLOCK_SIZE*4 + 1) * sizeof(char));
 	char *hashRes = malloc((SHA256_BLOCK_SIZE*2 + 1) * sizeof(char));
 
-	if (hash1 == NULL || hash2 == NULL || concatenateHash == NULL || hashRes == NULL) {
+	if (concatenateHash == NULL || hashRes == NULL) {
 		fprintf(stderr,"Issue while allocating hashes in merkleRoot()\n");
-		if(hash1 != NULL) free(hash1);
-		if(hash2 != NULL) free(hash2);
 		if(concatenateHash != NULL) free(concatenateHash);
 		if(hashRes != NULL) free(hashRes);
 		return NULL;
 	}
-	
+
 	if (nb == 1){
 		sha256ofString((BYTE *) transactions[0], hashRes);
+		free(concatenateHash);
 		return hashRes;
 	}
-	
+
 	if (nb == 2){
+		hash1 = malloc((SHA256_BLOCK_SIZE*2 + 1) * sizeof(char));
+		hash2 = malloc((SHA256_BLOCK_SIZE*2 + 1) * sizeof(char));
 		sha256ofString((BYTE *) transactions[0+deb], hash1);
-		sha256ofString((BYTE *) transactions[1+deb], hash2);		
+		sha256ofString((BYTE *) transactions[1+deb], hash2);
 		strcpy(concatenateHash, hash1);
 		strcat(concatenateHash, hash2);
-	} else if (nb > 3) {	
+	} else if (nb > 3) {
 		int t = nb >> 1;
 		hash1 = merkleRoot(transactions, t, deb);// = première partie de l'arbre
 		strcpy(concatenateHash, hash1);
@@ -60,14 +59,12 @@ char *merkleRoot(char *transactions[], int nb, int deb){
 		strcat(concatenateHash, hash2);
 	} else {
 		fprintf(stderr,"Transaction number should be a power of 2\n");
-		free(hash1);
-		free(hash2);
 		free(concatenateHash);
 		free(hashRes);
 		return NULL;
 	}
 	sha256ofString((BYTE *) concatenateHash, hashRes);
-	
+
 	free(hash1);
 	free(hash2);
 	free(concatenateHash);
@@ -78,7 +75,7 @@ char *merkleRoot(char *transactions[], int nb, int deb){
  * params : List of transaction, number of transaction
  * return : Hash root of the Merkle tree, NULL in case of errors
  */
-char *getMerkleRoot(char *transactions[TAILLE_TRANSACTION], int nb){	
+char *getMerkleRoot(char *transactions[TRANSACTION_SIZE], int nb){
 	int taille = greaterPowOf2(nb);
 	if (taille != nb){
 		char *tab[taille];
