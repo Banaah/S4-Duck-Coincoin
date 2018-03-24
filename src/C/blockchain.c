@@ -81,7 +81,7 @@ void setBlockHash(Block b, int difficulte){
 	}
 	strcat(blockConcat,b->merkleRoot);
 
-	int taille = strlen(blockConcat);
+	int taille = (int) strlen(blockConcat);
 
 	unsigned int nonce = 0;
 	do{
@@ -176,9 +176,7 @@ Block genBlock(int index, int nbTransactions, char **transactions, char *previou
 
 	for (i = 0; i < nbTransactions; ++i) {
 		strcpy(b->transactions[i], transactions[i]);
-		free(transactions[i]);
 	}
-	free(transactions);
 
 	strcpy(b->timeStamp,timeStamp);
 	// free(timeStamp);		TODO	-> fait planter, faudrait regarder l'implémentation de ctime()
@@ -278,6 +276,7 @@ BlockChain genCompleteRandomBlockChain(int difficulte, int nbBlocks) {
 	for (i = 0; i < nbBlocks; ++i) {
 		transactions = generateRandomTransactionsList(&nbTransactions);
 		addBlockToBlockChain(bc, transactions, nbTransactions);
+		freeTransac(transactions, nbTransactions);
 	}
 	return bc;
 }

@@ -28,3 +28,10 @@ char **generateRandomTransactionsList(int *nb){
 	*nb = taille;
 	return transactions;
 }
+
+void freeTransac(char** t, int nb){
+	for(int i = 0; i < nb; ++i){
+		free(t[i]);
+	}
+	free(t);
+}

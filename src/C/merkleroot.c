@@ -42,6 +42,9 @@ char *merkleRoot(char *transactions[], int nb, int deb){
 
 	if (nb == 1){
 		sha256ofString((BYTE *) transactions[0], hashRes);
+		free(hash1);
+		free(hash2);
+		free(concatenateHash);
 		return hashRes;
 	}
 

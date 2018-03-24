@@ -2,7 +2,7 @@
 
 int main(){
 
-	BlockChain bc = genCompleteRandomBlockChain(2,10);
+	BlockChain bc = genCompleteRandomBlockChain(3,10);
 	afficherBlockChain(bc);
 	freeBlockChain(bc);
 
