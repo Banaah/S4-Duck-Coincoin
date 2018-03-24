@@ -26,15 +26,13 @@ char *merkleRoot(char *transactions[], int nb, int deb){
 		return NULL;
 	}
 
-	char *hash1 = malloc((SHA256_BLOCK_SIZE*2 + 1) * sizeof(char));
-	char *hash2 = malloc((SHA256_BLOCK_SIZE*2 + 1) * sizeof(char));
+	char *hash1 = NULL;
+	char *hash2 = NULL;
 	char *concatenateHash = malloc((SHA256_BLOCK_SIZE*4 + 1) * sizeof(char));
 	char *hashRes = malloc((SHA256_BLOCK_SIZE*2 + 1) * sizeof(char));
 
-	if (hash1 == NULL || hash2 == NULL || concatenateHash == NULL || hashRes == NULL) {
+	if (concatenateHash == NULL || hashRes == NULL) {
 		fprintf(stderr,"Issue while allocating hashes in merkleRoot()\n");
-		if(hash1 != NULL) free(hash1);
-		if(hash2 != NULL) free(hash2);
 		if(concatenateHash != NULL) free(concatenateHash);
 		if(hashRes != NULL) free(hashRes);
 		return NULL;
@@ -42,13 +40,13 @@ char *merkleRoot(char *transactions[], int nb, int deb){
 
 	if (nb == 1){
 		sha256ofString((BYTE *) transactions[0], hashRes);
-		free(hash1);
-		free(hash2);
 		free(concatenateHash);
 		return hashRes;
 	}
 
 	if (nb == 2){
+		hash1 = malloc((SHA256_BLOCK_SIZE*2 + 1) * sizeof(char));
+		hash2 = malloc((SHA256_BLOCK_SIZE*2 + 1) * sizeof(char));
 		sha256ofString((BYTE *) transactions[0+deb], hash1);
 		sha256ofString((BYTE *) transactions[1+deb], hash2);
 		strcpy(concatenateHash, hash1);
@@ -61,8 +59,6 @@ char *merkleRoot(char *transactions[], int nb, int deb){
 		strcat(concatenateHash, hash2);
 	} else {
 		fprintf(stderr,"Transaction number should be a power of 2\n");
-		free(hash1);
-		free(hash2);
 		free(concatenateHash);
 		free(hashRes);
 		return NULL;
