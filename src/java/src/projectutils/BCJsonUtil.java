@@ -45,9 +45,7 @@ public class BCJsonUtil {
 
         //2. Convert object to JSON string and save into a file directly
         try (FileWriter writer = new FileWriter(filename)) {
-
             gson.toJson(je, writer);
-
         } catch (IOException e) {
             e.printStackTrace();
         }

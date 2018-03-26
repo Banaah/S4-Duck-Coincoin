@@ -10,7 +10,9 @@
 
 #include <time.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 char **generateRandomTransactionsList(int *nb);
+void freeTransac(char** t, int nb);
 
 #endif //C_GENERATE_TRANSACTIONS_H

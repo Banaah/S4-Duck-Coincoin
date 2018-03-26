@@ -54,5 +54,8 @@ public class AddBlockWorker extends SwingWorker<BlockChain, Integer> {
         jp.setStringPainted(false);
 
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 }

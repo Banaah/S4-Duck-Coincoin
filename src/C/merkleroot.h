@@ -9,8 +9,9 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <stdio.h>
+#include <string.h>
 
-#define TAILLE_TRANSACTION 10
+#define TRANSACTION_SIZE 22
 
 char *getMerkleRoot(char *transactions[], int nb);
 
