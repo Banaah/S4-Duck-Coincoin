@@ -12,11 +12,7 @@
 #define TRANSACTION_SIZE 22
 #define NB_MAX_TRANSACTION 100
 #define TAILLE_BLOCK_PREHASH 200
-#define DIFFICULTY 4
 
-#define DIFFICULTY 4
-
->>>>>>> e000e90a20e554d1788fb7187686f73c6c16ba0e
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>

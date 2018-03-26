@@ -5,8 +5,6 @@
 
 #include "blockchain.h"
 
-<<<<<<< HEAD
-=======
 typedef struct etBlock {
 	int index;
 	int nbTransactions;
@@ -17,7 +15,7 @@ typedef struct etBlock {
 	char merkleRoot[HASH_SIZE + 1];
 	char blockHash[HASH_SIZE + 1];
 }* Block;
->>>>>>> e000e90a20e554d1788fb7187686f73c6c16ba0e
+
 
 typedef struct etBlockList {
 	Block block;
