@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GenRdBlockCGui {
+    BlockChain b;
+
     private JPanel Dcc;
     private JButton creer;
     private JPanel menu1;
@@ -17,8 +19,11 @@ public class GenRdBlockCGui {
     private JLabel labeldiff;
     private JLabel labelnb;
     private JProgressBar creation;
+    private JTextField fichierfield;
+    private JPanel fichierpabel;
+    private JButton fichierbouton;
 
-    public GenRdBlockCGui() {
+    GenRdBlockCGui() {
 
         creer.addActionListener(new ActionListener() {
             @Override
@@ -26,7 +31,14 @@ public class GenRdBlockCGui {
                 creation.setStringPainted(true);
                 creation.setMaximum((int) spinnernb.getValue());
                 BlockChain b = new BlockChain((int) spinnerdiff.getValue());
-                AddBlockWorker w = new AddBlockWorker(b, (int) spinnernb.getValue(), creation);
+                String sortie = fichierfield.getText();
+                if (sortie.equals("")) {
+                    JFileChooser fileChooser = new JFileChooser();
+                    if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                        sortie = fileChooser.getSelectedFile().toString();
+                    }
+                }
+                AddBlockWorker w = new AddBlockWorker(b, (int) spinnernb.getValue(), creation, sortie);
                 w.execute();
                 creation.setValue(0);
             }
@@ -54,9 +66,18 @@ public class GenRdBlockCGui {
                 }
             }
         });
+        fichierbouton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    fichierfield.setText(fileChooser.getSelectedFile().toString());
+                }
+            }
+        });
     }
 
-    public JPanel getDcc() {
+    JPanel getDcc() {
         return Dcc;
     }
 }
