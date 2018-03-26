@@ -20,8 +20,8 @@
 #include <stdbool.h>
 
 #include "merkleroot.h"
-#include "sha256_utils.h"
-#include "randomgen/generate_transactions.h"
+#include "../utils/sha256_utils.h"
+#include "../randomgen/generate_transactions.h"
 
 typedef struct etBlockChain *BlockChain;
 typedef struct etBlock *Block;

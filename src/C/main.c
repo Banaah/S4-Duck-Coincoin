@@ -1,4 +1,4 @@
-#include "blockchain.h"
+#include "struct/blockchain.h"
 
 int main(){
 	BlockChain bc = genCompleteRandomBlockChain(2,10);
