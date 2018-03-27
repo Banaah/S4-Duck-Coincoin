@@ -8,5 +8,6 @@
 #include <time.h>
 
 #include "../struct/blockchain.h"
+#include "../struct/block.h"
 
 #endif //C_CHEAT_H

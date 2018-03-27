@@ -5,7 +5,7 @@
 #include "cheat.h"
 
 int cheatBlockFromBlockchain(BlockChain bc, int nbBlock){
-	if (nbBlock < 1 || nbBlock > bc->nbBlocks){
+	if (nbBlock < 1 || nbBlock > getNbBlock(bc)){
 		fprintf(stderr, "erreur nb bloc");
 		return -1;
 	}
@@ -15,7 +15,7 @@ int cheatBlockFromBlockchain(BlockChain bc, int nbBlock){
 	Block b2;
 	do {
 		b = getBlockFromBlockChain(bc, i++);
-	}while(i < bc->nbBlocks);
+	}while(i < getNbBlock(bc));
 	return 0;
 }
 
