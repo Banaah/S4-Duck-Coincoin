@@ -5,8 +5,6 @@
 #ifndef C_BLOCKCHAIN_H
 #define C_BLOCKCHAIN_H
 
-<<<<<<< HEAD
-=======
 #define HASH_SIZE 256
 #define TIMESTAMP_SIZE 25
 #define TRANSACTION_SIZE 22
@@ -25,6 +23,7 @@
 typedef struct etBlockChain *BlockChain;
 
 BlockChain genCompleteRandomBlockChain(int difficulte, int nbBlocks);
+BlockChain genCompleteRandomBlockChainConsole(int difficulte, int nbBlocks);
 
 BlockChain initBlockChain(int difficulte);
 
