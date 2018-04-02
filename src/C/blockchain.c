@@ -137,7 +137,7 @@ void bougerBarreDeChargement(float avancement) {
 	int j=0;
 	int limite = (int)(avancement*50);
 	while(j<50) {
-		if(j<limite) {
+		if(j<limite+1) {
 			barre[j] = '#';
 		} else {
 			barre[j] = ' ';
