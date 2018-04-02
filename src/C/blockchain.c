@@ -83,7 +83,7 @@ BlockChain initBlockChain(int difficulte) {
 Block getBlockFromBlockChain(BlockChain bc, int index) {
 	int pos = 0;
 	BlockList bl = bc->blockList;
-	while(pos!=index && pos<bc->nbBlocks) {
+	while(pos!=index && pos<bc->nbBlocks-1) {
 		bl = bl->next;
 		++pos;
 	}

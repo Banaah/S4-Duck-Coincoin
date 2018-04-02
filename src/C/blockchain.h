@@ -33,6 +33,8 @@ bool isBlockChainValid(BlockChain bc);
 
 void afficherBlockChain(BlockChain bc);
 
+Block getBlockFromBlockChain(BlockChain bc, int index);
+
 void freeBlockChain(BlockChain bc);
 
 #endif //C_BLOCKCHAIN_H
