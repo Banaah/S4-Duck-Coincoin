@@ -133,17 +133,18 @@ BlockChain genCompleteRandomBlockChain(int difficulte, int nbBlocks) {
  * pre : 0<=avancement<=1 
  */
 void bougerBarreDeChargement(float avancement) {
-	char barre[50];
+	char barre[51];
 	int j=0;
 	int limite = (int)(avancement*50);
-	while(j<50) {
-		if(j<limite+1) {
+	while(j<51) {
+		if(j<=limite) {
 			barre[j] = '#';
 		} else {
 			barre[j] = ' ';
 		}
 		++j;
 	}
+	barre[51] = (char)0;
 	
 	printf("\r[%-50s]%d%%",barre,(int)(avancement*100));
 	fflush(stdout);
@@ -171,7 +172,7 @@ BlockChain genCompleteRandomBlockChainConsole(int difficulte, int nbBlocks) {
 		freeTransac(transactions, nbTransactions);
 		
 	}
-	bougerBarreDeChargement(avancement);
+	bougerBarreDeChargement((float)1);
 	printf("\n");
 	return bc;
 }

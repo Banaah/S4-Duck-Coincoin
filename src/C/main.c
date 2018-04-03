@@ -6,7 +6,9 @@
 int main(){
 	char input[INPUT_LENGTH];
 	int indice;
+	int tailleInput;
 
+	/*
 	char *tab[] = {"Source-Destination:88",
 				   "Source-Destination:55",
 				   "Source-Destination:4",
@@ -34,15 +36,16 @@ int main(){
 
 	char *res2 = getMerkleRoot(tab,21);
 	printf("OUI : %s\n",res2);
-
+	*/
+	system("clear");
 	printf("Bienvenue dans l'implementation du DuckCoinCoin par la Team Belette !\n\t\tQuentin Nouvel\tFrancois Gaits\tLeo Guimas\n");
 	printf("Generer une blockchain ? [o/n]\n");
+	scanf("%s", input);
 
-	scanf("%s",input);
 	if(input[0] == 'o') {
-		printf("Generation de la blockchain...\n");
-		BlockChain bc = genCompleteRandomBlockChainConsole(3, 10);
-		printf("Ecrivez le numero d'un block ou \"bc\" pour l'afficher ou \"q\" pour quitter\n");
+		printf("\b\bGeneration de la blockchain...\n");
+		BlockChain bc = genCompleteRandomBlockChainConsole(3, 20);
+		printf("Blockchain generee !\nEcrivez le numero d'un block ou \"bc\" pour l'afficher ou \"q\" pour quitter\n");
 		scanf("%s", input);
 
 		while(input[0] != 'q') {
