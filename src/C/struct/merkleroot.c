@@ -96,3 +96,46 @@ char *getMerkleRoot(char *transactions[TRANSACTION_SIZE], int nb){
 	}
 	return merkleRoot(transactions, taille, 0);
 }
+
+char *merkleRootIt(char *transactions[], int nbTransactions) {
+	int i = 0;
+	int nb = nbTransactions;
+	char *hashRes = malloc((SHA256_BLOCK_SIZE*2 + 1) * sizeof(char));
+
+	if(nb == 1) {
+		sha256ofString((BYTE*)transactions[0],hashRes);
+		return hashRes;
+	}
+
+	char concatenateHash[SHA256_BLOCK_SIZE*4 + 1];
+	char **hashTab = (char**) malloc(sizeof(char*)*(nb+1)/2);
+	for(i = 0;i<(nb+1)/2;++i) {
+		hashTab[i] = (char *) malloc(sizeof(char)*(SHA256_BLOCK_SIZE*2 + 1));
+	}
+
+	for(i = 0;i<nb;i=i+2) {
+		strcpy(concatenateHash,transactions[i]);
+		strcat(concatenateHash,i+1 >= nb ? transactions[i] : transactions[i+1]);
+		sha256ofString((BYTE*)concatenateHash,hashTab[i/2]);
+	}
+
+	nb = (nb+1)/2;
+
+	while(nb != 1) {
+		printf("a : %d\n",nb);
+		for (i = 0; i < nb; i = i + 2) {
+			strcpy(concatenateHash, hashTab[i]);
+			strcat(concatenateHash, i + 1 >= nb ? hashTab[i] : hashTab[i + 1]);
+			sha256ofString((BYTE*)concatenateHash,hashTab[i/2]);
+		}
+		nb = (nb + 1) / 2;
+	}
+	strcpy(hashRes,hashTab[0]);
+
+	for(i=0;i<(nbTransactions+1)/2;++i){
+		free(hashTab[i]);
+	}
+	free(hashTab);
+
+	return hashRes;
+}

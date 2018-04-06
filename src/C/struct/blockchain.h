@@ -32,6 +32,7 @@ bool isFinished(Iterator it);
 Block getBlockFromIterator(Iterator it);
 
 BlockChain genCompleteRandomBlockChain(int difficulte, int nbBlocks);
+BlockChain genCompleteRandomBlockChainConsole(int difficulte, int nbBlocks);
 
 BlockChain initBlockChain(int difficulte);
 

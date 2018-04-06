@@ -14,5 +14,6 @@
 #define TRANSACTION_SIZE 22
 
 char *getMerkleRoot(char *transactions[], int nb);
+char *merkleRootIt(char *transactions[], int nbTransactions);
 
 #endif //C_MERKLEROOT_H
