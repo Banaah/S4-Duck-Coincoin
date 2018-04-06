@@ -1,33 +1,18 @@
 //
-// Created by Francois on 23/02/2018.
+// Created by Francois on 26/03/2018.
 //
+#include "block.h"
 
-
-#include "blockchain.h"
-
-typedef struct etBlock {
+struct etBlock {
 	int index;
 	int nbTransactions;
-	unsigned int nonce;   //TODO On verra plus tard
-	char transactions[NB_MAX_TRANSACTION][TRANSACTION_SIZE + 1];
+	unsigned int nonce;
+	char** transactions;
 	char timeStamp[TIMESTAMP_SIZE + 1];
-	char previousHash[HASH_SIZE + 1];
-	char merkleRoot[HASH_SIZE + 1];
+	char* previousHash;
+	char *merkleRoot;
 	char blockHash[HASH_SIZE + 1];
-}* Block;
-
-typedef struct etBlockList {
-	Block block;
-	struct etBlockList *next;
-}* BlockList;
-
-
-typedef struct etBlockChain {
-	int nbBlocks;
-	int difficulte;
-	BlockList blockList;
-	BlockList lastBlockList;
-}* BlockChain;
+};
 
 char *genTimeStamp() {
 	time_t curtime;
@@ -35,9 +20,6 @@ char *genTimeStamp() {
 	return ctime(&curtime);
 }
 
-/*
- * Vérifie sur un hash de block vérifie la difficulté
- */
 bool isMiningFinished(const char* hash, int difficulte){
 	for (int i = 0; i < difficulte; ++i) {
 		if (hash[i] != '0') return false;
@@ -45,21 +27,17 @@ bool isMiningFinished(const char* hash, int difficulte){
 	return true;
 }
 
-/*
- * Mine le contenu du Block jusqu'à ce qu'il valide la difficulté et set les valeurs dans le block
- */
 void setBlockHash(Block b, int difficulte){
 	int i;
-	int tailleConcat = 3 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 7;
-	char blockHash[HASH_SIZE + 1];
-	//char* blockPreHash = (char *) malloc(sizeof(char)*(tailleConcat + 1));
+	int tailleConcat = 3 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 10;
 	//On reserve la mémoire pour, dans l'ordre : l'index [0-999], le hash précédent, le timestamp, le nbTransaction [0-999], les transactions, la merkle root, la nonce [0-9 999 999], et le '/0'.
+	char blockHash[HASH_SIZE + 1];
 	char* blockConcat = (char *) malloc(sizeof(char)*(tailleConcat + 1));
 	//La meme mais sans la nonce
 
 	char strIndex[3];
 	char strNbTransactions[3];
-	char strNonce[7];
+	char strNonce[10];
 
 	if (sprintf(strIndex,"%d",b->index) < 0) {
 		perror("Erreur de conversion de l'index");
@@ -106,6 +84,7 @@ void setBlockHash(Block b, int difficulte){
 	free(blockConcat);
 }
 
+
 bool isBlockValid (Block b) {
 	int i;
 
@@ -148,104 +127,41 @@ bool isBlockValid (Block b) {
 	return strcmp(b->blockHash,blockHash) == 0;
 }
 
-bool isBlockChainValid(BlockChain bc) {
-	int i;
-	BlockList bl = bc->blockList;
-	for(i=0;i<bc->nbBlocks;++i) {
-		if(!isBlockValid(bl->block)) {
-			printf("Block n%d invalide\n",i);
-			return false;
-		}
-		bl = bl->next;
-	}
-	return true;
-}
-
-/*
- * genere un Block (avec calcul de la merkle root)
- */
-Block genBlock(int index, int nbTransactions, char **transactions, char *previousHash, int difficulte) {
+Block genBlock(int index, int nbTransactions, char **transactions, Block previousBlock, int difficulte) {
 	int i;
 	char *timeStamp = genTimeStamp();
-	char *merkleRoot = getMerkleRoot(transactions, nbTransactions);
 
 	Block b = (Block) malloc(sizeof(struct etBlock));
 	b->index = index;
 	b->nbTransactions = nbTransactions;
-	strcpy(b->previousHash, previousHash);
-
-	for (i = 0; i < nbTransactions; ++i) {
-		strcpy(b->transactions[i], transactions[i]);
-	}
+	b->previousHash =  previousBlock->blockHash;
+	b->transactions = transactions;
 
 	strcpy(b->timeStamp,timeStamp);
-	// free(timeStamp);		TODO	-> fait planter, faudrait regarder l'implémentation de ctime()
-	strcpy(b->merkleRoot,merkleRoot);
-	free(merkleRoot);
+	// free(timeStamp);		-> fait planter, implémentation de ctime()...
+	b->merkleRoot = getMerkleRoot(transactions, nbTransactions);
 	setBlockHash(b, difficulte);
 
 	return b;
 }
 
-/*
- * Initialise la struct interne BlockList avec le block genesis
- */
-BlockList initBlockList() {
-	BlockList bl = (BlockList) malloc(sizeof(struct etBlockList));
-	char *genesis[] = {"genesis block"};
-	bl->block = genBlock(0,1,genesis,"0", 0);
-	bl->next = NULL;
-	return bl;
-}
+Block genGenesisBlock() {
+	char tr[] = "genesis block";
+	char *timeStamp = genTimeStamp();
 
-/*
- * genere la struct interne BlockList avec un block donne
- */
-BlockList genBlockList(Block b) {
-	BlockList bl = (BlockList) malloc(sizeof(struct etBlockList));
-	bl->block = b;
-	bl->next = NULL;
+	Block b = (Block) malloc(sizeof(struct etBlock));
+	b->index = 0;
+	b->nbTransactions = 1;
+	b->previousHash = "0";
+	b->transactions = (char**) malloc(sizeof(char*));
+	b->transactions[0] = (char*) malloc(14*sizeof(char));
+	strcpy(b->transactions[0], tr);
+	b->merkleRoot = getMerkleRoot(b->transactions, 1);
 
-	return bl;
-}
+	strcpy(b->timeStamp,timeStamp);
+	setBlockHash(b, 0);
 
-/*
- * Init une BlockChain avec le block genesis
- */
-BlockChain initBlockChain(int difficulte) {
-	BlockChain bc = (BlockChain) malloc(sizeof(struct etBlockChain));
-	bc->difficulte = difficulte;
-	bc->blockList = initBlockList();
-	bc->lastBlockList = bc->blockList;
-	bc->nbBlocks = 1;
-
-	return bc;
-}
-
-
-/*
- * renvoie le block correspondant à l'index dans la BlockChain
- */
-Block getBlockFromBlockChain(BlockChain bc, int index) {
-	int pos = 0;
-	BlockList bl = bc->blockList;
-	while(pos!=index && pos<bc->nbBlocks) {
-		bl = bl->next;
-		++pos;
-	}
-	return bl->block;
-}
-
-/*
- * Genere et rajoute un block à la blockchain
- */
-
-void addBlockToBlockChain(BlockChain bc, char** transactions, int nbTransactions) {
-	Block b = genBlock(bc->nbBlocks,nbTransactions,transactions,bc->lastBlockList->block->blockHash,bc->difficulte);
-
-	bc->lastBlockList->next = genBlockList(b);
-	bc->lastBlockList = bc->lastBlockList->next;
-	++bc->nbBlocks;
+	return b;
 }
 
 void afficherBlock(Block b) {
@@ -258,49 +174,13 @@ void afficherBlock(Block b) {
 	printf("\tTimestamp : %s\tHash precedent : %s\n\tMerkle root : %s\n\tNonce : %d\n\tHash du block : %s\n",b->timeStamp,b->previousHash,b->merkleRoot,b->nonce,b->blockHash);
 }
 
-void afficherBlockChain(BlockChain bc) {
-	int i;
-	BlockList bl = bc->blockList;
-	for(i=0;i<bc->nbBlocks;++i) {
-		afficherBlock(bl->block);
-		printf("\n");
-		bl = bl->next;
-	}
-}
-
-BlockChain genCompleteRandomBlockChain(int difficulte, int nbBlocks) {
-	int i;
-	int nbTransactions;
-	char **transactions;
-
-	BlockChain bc = initBlockChain(difficulte);
-	for (i = 0; i < nbBlocks; ++i) {
-		transactions = generateRandomTransactionsList(&nbTransactions);
-		addBlockToBlockChain(bc, transactions, nbTransactions);
-		freeTransac(transactions, nbTransactions);
-	}
-	return bc;
-}
-
 void freeBlock(Block b) {
-	free(b);
-}
-
-void freeBlockChain(BlockChain bc) {
-	BlockList bl = bc->blockList;
-	BlockList freeBl;
-	int i = 0;
-
-	while(i<bc->nbBlocks){
-		freeBl = bl;
-		bl = bl->next;
-
-		freeBlock(freeBl->block);
-		free(freeBl);
-
-		++i;
+	free(b->merkleRoot);
+	for (int i = 0; i < b->nbTransactions; ++i) {
+		free(b->transactions[i]);
 	}
-	free(bc);
+	free(b->transactions);
+	free(b);
 }
 
 /*
@@ -321,3 +201,17 @@ char *getTimeStampFromBlock(Block b) {
 char *getBlockHashFromBlock(Block b) {
 	return b->blockHash;
 };
+
+void setTransactions(Block b, char **newTransactions, int nbNewTransactions){
+	for (int i = 0; i < b->nbTransactions; ++i) {
+		free(b->transactions[i]);
+	}
+	free(b->transactions);
+	b->nbTransactions = nbNewTransactions;
+	b->transactions = newTransactions;
+}
+
+char **getTransactions(Block b, int *nb){
+	*nb = b->nbTransactions;
+	return b->transactions;
+}
