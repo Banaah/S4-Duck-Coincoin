@@ -25,5 +25,7 @@ Block genBlock(int index, int nbTransactions, char **transactions, Block previou
 Block genGenesisBlock();
 void afficherBlock(Block b);
 void freeBlock(Block b);
-
+void setTransactions(Block b, char **newTransactions, int nbNewTransactions);
+void setBlockHash(Block b, int difficulte);
+char **getTransactions(Block b, int *nb);
 #endif //C_BLOCK_H

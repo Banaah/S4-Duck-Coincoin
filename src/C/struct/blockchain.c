@@ -5,23 +5,12 @@
 
 #include "blockchain.h"
 
-typedef struct etBlock {
-	int index;
-	int nbTransactions;
-	unsigned int nonce;   //TODO On verra plus tard
-	char transactions[NB_MAX_TRANSACTION][TRANSACTION_SIZE + 1];
-	char timeStamp[TIMESTAMP_SIZE + 1];
-	char previousHash[HASH_SIZE + 1];
-	char merkleRoot[HASH_SIZE + 1];
-	char blockHash[HASH_SIZE + 1];
-}* Block;
-
-
 typedef struct etBlockList {
 	Block block;
 	struct etBlockList *next;
 }* BlockList;
 
+typedef BlockList Iterator;
 
 typedef struct etBlockChain {
 	int nbBlocks;
@@ -29,6 +18,22 @@ typedef struct etBlockChain {
 	BlockList blockList;
 	BlockList lastBlockList;
 }* BlockChain;
+
+Iterator getIterator(BlockChain bc){
+	return (Iterator) bc->blockList;
+}
+
+Iterator next(Iterator it){
+	return it->next;
+}
+
+bool isFinished(Iterator it){
+	return it->next==NULL;
+}
+
+Block getBlockFromIterator(Iterator it){
+	return it->block;
+}
 
 bool isBlockChainValid(BlockChain bc) {
 	int i;
@@ -117,13 +122,10 @@ void afficherBlockChain(BlockChain bc) {
 BlockChain genCompleteRandomBlockChain(int difficulte, int nbBlocks) {
 	int i;
 	int nbTransactions;
-	char **transactions;
 
 	BlockChain bc = initBlockChain(difficulte);
 	for (i = 0; i < nbBlocks; ++i) {
-		transactions = generateRandomTransactionsList(&nbTransactions);
-		addBlockToBlockChain(bc, transactions, nbTransactions);
-		freeTransac(transactions, nbTransactions);
+		addBlockToBlockChain(bc, generateRandomTransactionsList(&nbTransactions), nbTransactions);
 	}
 	return bc;
 }
@@ -149,5 +151,9 @@ void freeBlockChain(BlockChain bc) {
 
 int getNbBlock(BlockChain bc){
 	return bc->nbBlocks;
+}
+
+int getBlockChainDifficulty(BlockChain bc){
+	return bc->difficulte;
 }
 

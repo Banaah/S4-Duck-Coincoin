@@ -21,6 +21,16 @@
 
 typedef struct etBlockChain *BlockChain;
 
+typedef struct etBlockList* Iterator;
+
+Iterator getIterator(BlockChain bc);
+
+Iterator next(Iterator it);
+
+bool isFinished(Iterator it);
+
+Block getBlockFromIterator(Iterator it);
+
 BlockChain genCompleteRandomBlockChain(int difficulte, int nbBlocks);
 
 BlockChain initBlockChain(int difficulte);
@@ -36,5 +46,7 @@ void afficherBlockChain(BlockChain bc);
 void freeBlockChain(BlockChain bc);
 
 int getNbBlock(BlockChain bc);
+
+int getBlockChainDifficulty(BlockChain bc);
 
 #endif //C_BLOCKCHAIN_H
