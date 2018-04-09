@@ -5,7 +5,7 @@
 #ifndef C_MERKLEROOT_H
 #define C_MERKLEROOT_H
 
-#include "sha256_utils.h"
+#include "../utils/sha256_utils.h"
 #include <stdlib.h>
 #include <memory.h>
 #include <stdio.h>

@@ -7,10 +7,10 @@ struct etBlock {
 	int index;
 	int nbTransactions;
 	unsigned int nonce;
-	char transactions[NB_MAX_TRANSACTION][TRANSACTION_SIZE + 1];
+	char** transactions;
 	char timeStamp[TIMESTAMP_SIZE + 1];
 	char* previousHash;
-	char merkleRoot[HASH_SIZE + 1];
+	char *merkleRoot;
 	char blockHash[HASH_SIZE + 1];
 };
 
@@ -29,7 +29,7 @@ bool isMiningFinished(const char* hash, int difficulte){
 
 void setBlockHash(Block b, int difficulte){
 	int i;
-	int tailleConcat = 3 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 7;
+	int tailleConcat = 3 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 10;
 	//On reserve la mémoire pour, dans l'ordre : l'index [0-999], le hash précédent, le timestamp, le nbTransaction [0-999], les transactions, la merkle root, la nonce [0-9 999 999], et le '/0'.
 	char blockHash[HASH_SIZE + 1];
 	char* blockConcat = (char *) malloc(sizeof(char)*(tailleConcat + 1));
@@ -37,7 +37,7 @@ void setBlockHash(Block b, int difficulte){
 
 	char strIndex[3];
 	char strNbTransactions[3];
-	char strNonce[7];
+	char strNonce[10];
 
 	if (sprintf(strIndex,"%d",b->index) < 0) {
 		perror("Erreur de conversion de l'index");
@@ -130,40 +130,35 @@ bool isBlockValid (Block b) {
 Block genBlock(int index, int nbTransactions, char **transactions, Block previousBlock, int difficulte) {
 	int i;
 	char *timeStamp = genTimeStamp();
-	char *merkleRoot = getMerkleRoot(transactions, nbTransactions);
 
 	Block b = (Block) malloc(sizeof(struct etBlock));
 	b->index = index;
 	b->nbTransactions = nbTransactions;
 	b->previousHash =  previousBlock->blockHash;
-
-	for (i = 0; i < nbTransactions; ++i) {
-		strcpy(b->transactions[i], transactions[i]);
-	}
+	b->transactions = transactions;
 
 	strcpy(b->timeStamp,timeStamp);
 	// free(timeStamp);		-> fait planter, implémentation de ctime()...
-	strcpy(b->merkleRoot,merkleRoot);
-	free(merkleRoot);
+	b->merkleRoot = getMerkleRoot(transactions, nbTransactions);
 	setBlockHash(b, difficulte);
 
 	return b;
 }
 
 Block genGenesisBlock() {
-	char *genesis[] = {"genesis block"};
+	char tr[] = "genesis block";
 	char *timeStamp = genTimeStamp();
-	char *merkleRoot = getMerkleRoot(genesis, 1);
 
 	Block b = (Block) malloc(sizeof(struct etBlock));
 	b->index = 0;
 	b->nbTransactions = 1;
 	b->previousHash = "0";
+	b->transactions = (char**) malloc(sizeof(char*));
+	b->transactions[0] = (char*) malloc(14*sizeof(char));
+	strcpy(b->transactions[0], tr);
+	b->merkleRoot = getMerkleRoot(b->transactions, 1);
 
-	strcpy(b->transactions[0],"genesis block");
 	strcpy(b->timeStamp,timeStamp);
-	strcpy(b->merkleRoot,merkleRoot);
-	free(merkleRoot);
 	setBlockHash(b, 0);
 
 	return b;
@@ -180,6 +175,11 @@ void afficherBlock(Block b) {
 }
 
 void freeBlock(Block b) {
+	free(b->merkleRoot);
+	for (int i = 0; i < b->nbTransactions; ++i) {
+		free(b->transactions[i]);
+	}
+	free(b->transactions);
 	free(b);
 }
 
@@ -201,3 +201,17 @@ char *getTimeStampFromBlock(Block b) {
 char *getBlockHashFromBlock(Block b) {
 	return b->blockHash;
 };
+
+void setTransactions(Block b, char **newTransactions, int nbNewTransactions){
+	for (int i = 0; i < b->nbTransactions; ++i) {
+		free(b->transactions[i]);
+	}
+	free(b->transactions);
+	b->nbTransactions = nbNewTransactions;
+	b->transactions = newTransactions;
+}
+
+char **getTransactions(Block b, int *nb){
+	*nb = b->nbTransactions;
+	return b->transactions;
+}
