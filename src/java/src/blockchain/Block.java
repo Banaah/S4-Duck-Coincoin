@@ -17,6 +17,16 @@ public class Block {
     private String blockHash;
     private Integer nonce;
 
+    /**
+     * Create block with mining of block hash.
+     *
+     * @param index          number of block in BC.
+     * @param previousHash   Hash of the previous block in BC "genesis block" if index = 0.
+     * @param nbTransactions Number of transactions in transactions
+     *                       (redundant of transactions.length(); but still there for Json).
+     * @param transactions   list of transactions.
+     * @param difficulte     Number of 0 to have at the beginning of blockHash.
+     */
     public Block(Integer index, String previousHash, Integer nbTransactions, String[] transactions, int difficulte) {
         this.index = index;
         Date curDate = new Date();
@@ -29,6 +39,12 @@ public class Block {
         this.blockHash = this.getHashedBlock(difficulte);//init aussi this.nonce
     }
 
+    /**
+     * Check if hash have enough 0 at the beginning to become hashBlock.
+     * @param hash hash to check.
+     * @param difficulte Number of 0 to have.
+     * @return True if enough 0 else false.
+     */
     private boolean isMiningFinished(String hash, int difficulte){
         for (int i = 0; i < difficulte; i++) {
             if ( hash.charAt(i) != '0') return false;
@@ -36,10 +52,18 @@ public class Block {
         return true;
     }
 
+    /**
+     * @return a string with all transactions after each other.
+     */
     private String getTransactionsString() {
         return Arrays.stream(this.transactions).collect(Collectors.joining(" "));
     }
 
+    /**
+     * Hash block check hash if good return else increment nonce and loop.
+     * @param difficulte Number of 0 to have.
+     * @return String of the hash of the block.
+     */
     private String getHashedBlock(int difficulte){
         String input = this.index.toString() + this.previousHash + this.timeStamp + this.nbTransactions.toString() + this.getTransactionsString() + this.merkleRoot;
         String output;
@@ -50,14 +74,6 @@ public class Block {
         --this.nonce;
         return output;
     }
-
-    /*private String computeMerkleRoot(){
-        String out;
-
-        return out;
-    }
-    */
-
 
     /* Tous les getter, pas de setter puisqu'un block ne peut pas être modifié sans modifié tous les suivant*/
 

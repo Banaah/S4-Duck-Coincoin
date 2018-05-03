@@ -38,6 +38,7 @@ public class BCJsonUtil {
         // JSON Parser
         //1. Convert object to JSON string
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        //PrettyPrinting formatte le Json pour le rendre lisible
         JsonParser jp = new JsonParser();
         String json = gson.toJson(BlockC);
         JsonElement je = jp.parse(json);

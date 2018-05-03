@@ -2,6 +2,9 @@ package randomgen;
 import java.util.Random;
 
 public class TransactionsRdGen {
+    /**
+     * @return a random list of simples transactions with random amounts.
+     */
     public static String[] getTransactionRdList(){
         Random rd = new Random();
         int nb = rd.nextInt(100)+1;

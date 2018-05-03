@@ -13,11 +13,25 @@ public class BlockChain {
         this.BC = new ArrayList<Block>();
         String transactions[] = new String[1];
         transactions[0] = "genesis block";
-        this.BC.add(new Block(this.nbBlocks++, "0", 1, transactions, this.difficulty));
+        this.BC.add(new Block(this.nbBlocks++,
+                "0",
+                1,
+                transactions,
+                this.difficulty));
     }
 
+    /**
+     * Add a block in the blockchain.
+     *
+     * @param transactions transactions list of the block.
+     */
     public void addBlock(String transactions[]) {
-        this.BC.add(0, new Block(this.nbBlocks++, BC.get(0).getBlockHash(), transactions.length, transactions, this.difficulty));
+        this.BC.add(0,
+                new Block(this.nbBlocks++,
+                        BC.get(0).getBlockHash(),
+                        transactions.length,
+                        transactions,
+                        this.difficulty));
     }
 
     public int getDifficulty() {
