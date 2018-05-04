@@ -7,21 +7,52 @@
 int main(){
 	char input[INPUT_LENGTH];
 	int indice;
-	int tailleInput;
+	int difficulte;
+	int nbBlocks;
+	double temp_cheat;
+
 	system("clear");
 	printf("Bienvenue dans l'implementation du DuckCoinCoin par la Team Belette !\n\t\tQuentin Nouvel\tFrancois Gaits\tLeo Guimas\n");
 	printf("Generer une blockchain ? [o/n]\n");
 	scanf("%s", input);
-
 	if(input[0] == 'o') {
+		printf("Difficulte ? : ");
+		scanf("%s", input);
+		difficulte = atoi(input);
+		while(difficulte <= 0 && input[0] != '0') {
+			printf("Saisie invalide, ressaisir : ");
+			scanf("%s", input);
+			difficulte = atoi(input);
+		}
+		printf("Longueur ? : ");
+		scanf("%s", input);
+		nbBlocks = atoi(input);
+		while(nbBlocks <= 0) {
+			printf("Saisie invalide, ressaisir : ");
+			scanf("%s", input);
+			nbBlocks = atoi(input);
+		}
 		printf("\b\bGeneration de la blockchain...\n");
-		BlockChain bc = genCompleteRandomBlockChainConsole(3, 20);
-		printf("Blockchain generee !\nEcrivez le numero d'un block ou \"bc\" pour l'afficher ou \"q\" pour quitter\n");
+		BlockChain bc = genCompleteRandomBlockChainConsole(difficulte, nbBlocks);
+		printf("Blockchain generee !\nCommandes :\n\t- x pour afficher le bloc x\n\t- \"bc\" pour afficher toute la blockchain\n\t- \"s\" pour supprimer un block (Cheater)\n\t- \"q\" pour quitter\n");
 		scanf("%s", input);
 
 		while(input[0] != 'q') {
 			if(input[0] == 'b' && input[1] == 'c') {
+				printf("Affichage de %d blocks\n",getNbBlock(bc));
 				afficherBlockChain(bc);
+			} else if (input[0] == 's') {
+				printf("Numero du block a supprimer : ");
+				scanf("%s", input);
+				indice = atoi(input);
+				while(indice <= 0) {
+					printf("Saisie invalide, ressaisir : ");
+					scanf("%s", input);
+					indice = atoi(input);
+				}
+				temp_cheat = cheaterDeleteBlock(bc,indice);
+				printf("Block supprime ! temps : %lf\n",temp_cheat);
+
 			} else {
 				indice = atoi(input);
 				if (indice == 0 && input[0] != '0') {
@@ -30,7 +61,7 @@ int main(){
 					afficherBlock(getBlockFromBlockChain(bc, indice));
 				}
 			}
-			printf("Ecrivez le numero d'un block ou \"bc\" pour l'afficher ou \"q\" pour quitter\n");
+			printf("Commandes :\n\t- x pour afficher le bloc x\n\t- \"bc\" pour afficher toute la blockchain\n\t- \"s\" pour supprimer un block (Cheater)\n\t- \"q\" pour quitter\n");
 			scanf("%s", input);
 		}
 

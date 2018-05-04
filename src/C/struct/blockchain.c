@@ -35,6 +35,10 @@ Block getBlockFromIterator(Iterator it){
 	return it->block;
 }
 
+void iteratorSetNext(Iterator it, Iterator next){
+	it->next = next;
+}
+
 bool isBlockChainValid(BlockChain bc) {
 	int i;
 	BlockList bl = bc->blockList;
@@ -150,6 +154,11 @@ void bougerBarreDeChargement(float avancement) {
 }
 
 BlockChain genCompleteRandomBlockChainConsole(int difficulte, int nbBlocks) {
+	if(nbBlocks<0) {
+		fprintf(stderr,"Nombre de Blocks invalides\n");
+		return NULL;
+	}
+
 	int i;
 
 	float avancement = 0;
@@ -190,6 +199,10 @@ void freeBlockChain(BlockChain bc) {
 		++i;
 	}
 	free(bc);
+}
+
+void setNbBlock(BlockChain bc,int nbBlocks){
+	bc->nbBlocks = nbBlocks;
 }
 
 int getNbBlock(BlockChain bc){

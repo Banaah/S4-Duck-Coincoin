@@ -27,5 +27,8 @@ void afficherBlock(Block b);
 void freeBlock(Block b);
 void setTransactions(Block b, char **newTransactions, int nbNewTransactions);
 void setBlockHash(Block b, int difficulte);
+int getIndex(Block b);
+void setIndex(Block b, int index);
+void setPreviousHash(Block b, Block previous);
 char **getTransactions(Block b, int *nb);
 #endif //C_BLOCK_H

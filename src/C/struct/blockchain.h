@@ -24,6 +24,7 @@ typedef struct etBlockChain *BlockChain;
 typedef struct etBlockList* Iterator;
 
 Iterator getIterator(BlockChain bc);
+void iteratorSetNext(Iterator it, Iterator next);
 
 Iterator next(Iterator it);
 
@@ -45,6 +46,8 @@ bool isBlockChainValid(BlockChain bc);
 void afficherBlockChain(BlockChain bc);
 
 void freeBlockChain(BlockChain bc);
+
+void setNbBlock(BlockChain bc, int nbBlocks);
 
 int getNbBlock(BlockChain bc);
 

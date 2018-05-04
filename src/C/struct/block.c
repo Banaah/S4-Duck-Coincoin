@@ -211,6 +211,18 @@ void setTransactions(Block b, char **newTransactions, int nbNewTransactions){
 	b->transactions = newTransactions;
 }
 
+int getIndex(Block b) {
+	return b->index;
+}
+
+void setIndex(Block b, int index) {
+	b->index = index;
+}
+
+void setPreviousHash(Block b, Block previous) {
+	b->previousHash = previous->blockHash;
+}
+
 char **getTransactions(Block b, int *nb){
 	*nb = b->nbTransactions;
 	return b->transactions;

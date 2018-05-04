@@ -10,6 +10,7 @@
 #include "../struct/blockchain.h"
 #include "../struct/block.h"
 
-double cheater(BlockChain bc, int nbBlock, char **transactions, int nbTransactions);
+double cheaterTransaction(BlockChain bc, int nbBlock, char **transactions, int nbTransactions);
+double cheaterDeleteBlock(BlockChain bc, int nbBlock);
 
 #endif //C_CHEAT_H
