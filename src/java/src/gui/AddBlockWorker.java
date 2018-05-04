@@ -46,12 +46,12 @@ public class AddBlockWorker extends SwingWorker<BlockChain, Integer> {
     /**
      * Mine Block and publish progression.
      * @return Blockchain modified.
-     * @throws Exception
+     * @throws Exception :shrug:
      */
     @Override
     protected BlockChain doInBackground() throws Exception {
         for (int i = 0; i < nbBlock; i++) {
-            b.addBlock(TransactionsRdGen.getTransactionRdList());
+            b.addBlock(TransactionsRdGen.getTransactionsRdListLvl2());
             publish(i);
         }
         return b;

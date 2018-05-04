@@ -37,7 +37,7 @@ public class BCJsonUtil {
     public static void BCJsonWriter(BlockChain BlockC, String filename){
         // JSON Parser
         //1. Convert object to JSON string
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
         //PrettyPrinting formatte le Json pour le rendre lisible
         JsonParser jp = new JsonParser();
         String json = gson.toJson(BlockC);

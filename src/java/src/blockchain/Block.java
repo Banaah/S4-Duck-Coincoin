@@ -1,4 +1,7 @@
 package blockchain;
+
+import blockchain.transaction.ITransactions;
+
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -12,7 +15,7 @@ public class Block {
     private String previousHash;
     private String timeStamp;
     private Integer nbTransactions;
-    private String transactions[];
+    private ITransactions transactions[];
     private String merkleRoot;
     private String blockHash;
     private Integer nonce;
@@ -27,16 +30,25 @@ public class Block {
      * @param transactions   list of transactions.
      * @param difficulte     Number of 0 to have at the beginning of blockHash.
      */
-    public Block(Integer index, String previousHash, Integer nbTransactions, String[] transactions, int difficulte) {
+    public Block(Integer index, String previousHash, Integer nbTransactions, ITransactions[] transactions, int difficulte) {
         this.index = index;
         Date curDate = new Date();
         this.timeStamp = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss aa").format(curDate);
         this.previousHash = previousHash;
         this.nbTransactions = nbTransactions;
         this.transactions = transactions;
-        this.merkleRoot = new MerkleRoot(this.transactions).getRoot();
+        this.merkleRoot = new MerkleRoot(this.toTransactionStringList()).getRoot();
         this.nonce = 0;
         this.blockHash = this.getHashedBlock(difficulte);//init aussi this.nonce
+    }
+
+    private String[] toTransactionStringList() {
+        String ret[] = new String[nbTransactions];
+        int i = 0;
+        for (ITransactions t : this.transactions) {
+            ret[i++] = t.toString();
+        }
+        return ret;
     }
 
     /**
@@ -56,7 +68,7 @@ public class Block {
      * @return a string with all transactions after each other.
      */
     private String getTransactionsString() {
-        return Arrays.stream(this.transactions).collect(Collectors.joining(" "));
+        return Arrays.stream(this.toTransactionStringList()).collect(Collectors.joining(" "));
     }
 
     /**
@@ -93,7 +105,7 @@ public class Block {
         return nbTransactions;
     }
 
-    public String[] getTransactions() {
+    public ITransactions[] getTransactions() {
         return transactions;
     }
 
