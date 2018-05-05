@@ -5,7 +5,7 @@ import projectutils.BCJsonUtil;
 
 import javax.swing.*;
 
-public class ChargerBlockC {
+class ChargerBlockC {
     private BlockChain b;
 
     private JPanel charger;

@@ -25,21 +25,18 @@ public class TransactionsRdGen {
         return tab;
     }
 
-    public static Transactions[] getTransactionsRdListLvl2(BlockChain b) throws Exception {
-        Random rd = new Random();
-        int nb = rd.nextInt(100) + 1;
-        Transactions tab[] = new Transactions[nb];
-        ECKey key1;
-        ECKey key2;
-        final NetworkParameters netParams;
-        netParams = NetworkParameters.testNet();
-        Date curDate = new Date();
+    @SuppressWarnings("deprecation")
+    public static Transactions[] getTransactionsRdListLvl2(BlockChain b) {
+        Address addressFromKey1, addressFromKey2;
+        ECKey key1, key2;
         String timestamp;
         int amount;
-        Integer index;
-        Address addressFromKey1;
-        Address addressFromKey2;
-        String publicKey;
+        int index;
+        int nb;
+        Random rd = new Random();
+        final NetworkParameters netParams = NetworkParameters.testNet();
+        Transactions tab[] = new Transactions[nb = (rd.nextInt(100) + 1)];
+        Date curDate = new Date();
         for (int i = 0; i < nb; i++) {
             key1 = new ECKey();
             key2 = new ECKey();

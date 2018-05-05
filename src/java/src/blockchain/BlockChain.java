@@ -8,10 +8,10 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class BlockChain {
-    private int difficulty;
+    private final int difficulty;
     private int nbBlocks;
-    private ArrayList<Block> BC;
-    private HashMap<String, String> publicKey;
+    private final ArrayList<Block> BC;
+    private final HashMap<String, String> publicKey;
 
     public BlockChain(int difficulty) {
         this.difficulty = difficulty;

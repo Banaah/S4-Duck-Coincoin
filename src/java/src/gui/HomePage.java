@@ -1,8 +1,6 @@
 package gui;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class HomePage {
     private JPanel Home;
@@ -17,25 +15,19 @@ public class HomePage {
     private JSeparator sep;
 
     public HomePage() {
-        creerBouton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFrame pop = new JFrame("Créer");
-                pop.setContentPane(new GenRdBlockCGui().getDcc());
-                pop.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                pop.pack();
-                pop.setVisible(true);
-            }
+        creerBouton.addActionListener(e -> {
+            JFrame pop = new JFrame("Créer");
+            pop.setContentPane(new GenRdBlockCGui().getDcc());
+            pop.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            pop.pack();
+            pop.setVisible(true);
         });
-        chargerBouton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFrame pop = new JFrame("Charger");
-                pop.setContentPane(new ChargerBlockC().getCharger());
-                pop.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                pop.pack();
-                pop.setVisible(true);
-            }
+        chargerBouton.addActionListener(e -> {
+            JFrame pop = new JFrame("Charger");
+            pop.setContentPane(new ChargerBlockC().getCharger());
+            pop.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            pop.pack();
+            pop.setVisible(true);
         });
     }
 

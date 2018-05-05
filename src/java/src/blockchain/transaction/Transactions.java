@@ -4,12 +4,12 @@ import blockchain.BlockChain;
 import org.bitcoinj.core.ECKey;
 
 public class Transactions implements ITransactions {
-    private int index;
-    private String timeStamp;
-    private String emetteur;
-    private String destinataire;
-    private int montant;
-    private String signature;
+    private final int index;
+    private final String timeStamp;
+    private final String emetteur;
+    private final String destinataire;
+    private final int montant;
+    private final String signature;
 
     public Transactions(int index, String emetteur, String destinataire, String timeStamp, int montant, String signature) {
         this.index = index;
@@ -21,7 +21,7 @@ public class Transactions implements ITransactions {
     }
 
     public boolean checkValidityTransaction(BlockChain b) throws Exception {
-        ECKey keyFromSign = new ECKey().signedMessageToKey(timeStamp + "," +
+        ECKey keyFromSign = ECKey.signedMessageToKey(timeStamp + "," +
                         emetteur + "," +
                         destinataire + "," +
                         montant + ","

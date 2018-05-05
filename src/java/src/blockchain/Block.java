@@ -10,15 +10,15 @@ import java.util.stream.Collectors;
 
 import static projectutils.HashUtil.applySha256;
 
-public class Block {
+class Block {
 
-    private Integer index;
-    private String previousHash;
-    private String timeStamp;
-    private Integer nbTransactions;
-    private Transactions transactions[];
-    private String merkleRoot;
-    private String blockHash;
+    private final Integer index;
+    private final String previousHash;
+    private final String timeStamp;
+    private final Integer nbTransactions;
+    private final Transactions[] transactions;
+    private final String merkleRoot;
+    private final String blockHash;
     private Integer nonce;
 
     /**

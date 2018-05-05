@@ -7,11 +7,11 @@ import randomgen.TransactionsRdGen;
 import javax.swing.*;
 import java.util.List;
 
-public class AddBlockWorker extends SwingWorker<BlockChain, Integer> {
-    private BlockChain b;
-    private int nbBlock;
-    private JProgressBar jp;
-    private boolean write;
+class AddBlockWorker extends SwingWorker<BlockChain, Integer> {
+    private final BlockChain b;
+    private final int nbBlock;
+    private final JProgressBar jp;
+    private final boolean write;
     private String path;
 
     /**

@@ -6,9 +6,9 @@ import java.util.Arrays;
 import static projectutils.HashUtil.applySha256;
 
 class MerkleRoot {
-    private ArrayList<String> listePrep;
+    private final ArrayList<String> listePrep;
     private String root;
-    private int nb;
+    private final int nb;
 
     /**
      * Iterative computation of the merkle tree.
