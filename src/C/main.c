@@ -64,7 +64,7 @@ int main(){
 					afficherBlock(getBlockFromBlockChain(bc, indice));
 				}
 			}
-			printf("Commandes :\n\t- x pour afficher le bloc x\n\t- \"bc\" pour afficher toute la blockchain\n\t- \"s\" pour supprimer un block (Cheater)\n\t- o\"js\" pour enregistrer la chaine en json\n\t- \"q\" pour quitter\n");
+			printf("Commandes :\n\t- x pour afficher le bloc x\n\t- \"bc\" pour afficher toute la blockchain\n\t- \"s\" pour supprimer un block (Cheater)\n\t- \"js\" pour enregistrer la chaine en json\n\t- \"q\" pour quitter\n");
 			scanf("%s", input);
 		}
 
