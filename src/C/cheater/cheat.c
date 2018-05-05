@@ -26,6 +26,9 @@ int deleteBlockFromBlockchain(BlockChain bc, int numBlock){
 		fprintf(stderr, "erreur nb bloc");
 		return -1;
 	}
+	float avancement;
+	int i = 0;
+
 	setNbBlock(bc,getNbBlock(bc)-1);
 
 	Iterator it = getIterator(bc);
@@ -39,12 +42,15 @@ int deleteBlockFromBlockchain(BlockChain bc, int numBlock){
 
 	if (!isFinished(it)) {
 		while(next(it) != NULL)	{
+			avancement = ((float)i++)/getNbBlock(bc);
+			bougerBarreDeChargement(avancement);
 			setIndex(getBlockFromIterator(next(it)),getIndex(getBlockFromIterator(next(it)))-1);
 			setPreviousHash(getBlockFromIterator(next(it)),getBlockFromIterator(it));
 			setBlockHash(getBlockFromIterator(next(it)), getBlockChainDifficulty(bc));
 			it = next(it);
 		}
 	}
+	bougerBarreDeChargement(1);
 	return 0;
 }
 

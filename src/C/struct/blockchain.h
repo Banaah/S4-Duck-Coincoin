@@ -48,6 +48,7 @@ void afficherBlockChain(BlockChain bc);
 void freeBlockChain(BlockChain bc);
 
 int blockChainToJson(BlockChain bc, char* filename);
+void bougerBarreDeChargement(float avancement);
 
 void setNbBlock(BlockChain bc, int nbBlocks);
 
