@@ -35,13 +35,13 @@ bool isMiningFinished(const char* hash, int difficulte){
 
 void setBlockHash(Block b, int difficulte){
 	int i;
-	int tailleConcat = 3 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 10;
+	int tailleConcat = 5 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 10;
 	//On reserve la mémoire pour, dans l'ordre : l'index [0-999], le hash précédent, le timestamp, le nbTransaction [0-999], les transactions, la merkle root, la nonce [0-9 999 999], et le '/0'.
 	char blockHash[HASH_SIZE + 1];
 	char* blockConcat = (char *) malloc(sizeof(char)*(tailleConcat + 1));
 	//La meme mais sans la nonce
 
-	char strIndex[3];
+	char strIndex[5];
 	char strNbTransactions[3];
 	char strNonce[10];
 
@@ -94,10 +94,10 @@ void setBlockHash(Block b, int difficulte){
 bool isBlockValid (Block b) {
 	int i;
 
-	char* blockPreHash = (char *) malloc(sizeof(char)*(3 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 7 + 1));
+	char* blockPreHash = (char *) malloc(sizeof(char)*(5 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 7 + 1));
 	char blockHash[HASH_SIZE + 1];
 
-	char strIndex[3];
+	char strIndex[5];
 	char strNbTransactions[3];
 	char strNonce[7];
 

@@ -8,7 +8,7 @@ char **generateRandomTransactionsList(int *nb){
 	char a;
 	srand((unsigned int) clock());
 	char chaine[] = "Source-Destination:";
-	int taille = (rand()%NB_MAX_TRANSACTION)+1; // NOLINT
+	int taille = (rand()%(NB_MAX_TRANSACTION-1))+1; // NOLINT
 	char** transactions = malloc(taille*sizeof(char*));
 	for (int i = 0; i < taille; ++i) {
 		transactions[i] = malloc(TRANSACTION_SIZE*sizeof(char));
