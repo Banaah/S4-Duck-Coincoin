@@ -1,6 +1,7 @@
 package blockchain;
 
 import blockchain.transaction.ITransactions;
+import blockchain.transaction.Transactions;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -15,7 +16,7 @@ public class Block {
     private String previousHash;
     private String timeStamp;
     private Integer nbTransactions;
-    private ITransactions transactions[];
+    private Transactions transactions[];
     private String merkleRoot;
     private String blockHash;
     private Integer nonce;
@@ -30,7 +31,7 @@ public class Block {
      * @param transactions   list of transactions.
      * @param difficulte     Number of 0 to have at the beginning of blockHash.
      */
-    public Block(Integer index, String previousHash, Integer nbTransactions, ITransactions[] transactions, int difficulte) {
+    public Block(Integer index, String previousHash, Integer nbTransactions, Transactions[] transactions, int difficulte) {
         this.index = index;
         Date curDate = new Date();
         this.timeStamp = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss aa").format(curDate);
@@ -115,7 +116,7 @@ public class Block {
 
     /* Tous les getter, pas de setter puisqu'un block ne peut pas être modifié sans modifié tous les suivant*/
 
-    public Integer getIndex() {
+    Integer getIndex() {
         return index;
     }
 
@@ -139,7 +140,7 @@ public class Block {
         return merkleRoot;
     }
 
-    public String getBlockHash() {
+    String getBlockHash() {
         return blockHash;
     }
 

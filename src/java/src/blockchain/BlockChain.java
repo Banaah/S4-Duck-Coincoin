@@ -1,6 +1,5 @@
 package blockchain;
 
-import blockchain.transaction.ITransactions;
 import blockchain.transaction.Transactions;
 
 import java.text.SimpleDateFormat;
@@ -17,8 +16,8 @@ public class BlockChain {
     public BlockChain(int difficulty) {
         this.difficulty = difficulty;
         this.nbBlocks = 0;
-        this.BC = new ArrayList<Block>();
-        publicKey = new HashMap<String, String>();
+        this.BC = new ArrayList<>();
+        publicKey = new HashMap<>();
         Transactions transactions[] = new Transactions[1];
         Date curDate = new Date();
         transactions[0] = new Transactions(0, "genesis", "block", new SimpleDateFormat("MMM dd, yyyy HH:mm:ss aa").format(curDate), 0, "");
@@ -34,7 +33,7 @@ public class BlockChain {
      *
      * @param transactions transactions list of the block.
      */
-    public void addBlock(ITransactions transactions[]) {
+    public void addBlock(Transactions transactions[]) {
         this.BC.add(0,
                 new Block(this.nbBlocks++,
                         BC.get(0).getBlockHash(),
