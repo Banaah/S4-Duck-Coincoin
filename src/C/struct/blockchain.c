@@ -8,6 +8,7 @@
 typedef struct etBlockList {
 	Block block;
 	struct etBlockList *next;
+	struct etBlockList *prev;
 }* BlockList;
 
 typedef BlockList Iterator;
@@ -23,8 +24,19 @@ Iterator getIterator(BlockChain bc){
 	return (Iterator) bc->blockList;
 }
 
+Iterator getIteratorFromLast(BlockChain bc){
+	return (Iterator) bc->lastBlockList;
+}
+
 Iterator next(Iterator it){
 	return it->next;
+}
+
+Iterator prev(Iterator it){
+	return it->prev;
+}
+bool isAtStart(Iterator it){
+	return it==NULL;
 }
 
 bool isFinished(Iterator it){
@@ -59,6 +71,7 @@ BlockList initBlockList() {
 	BlockList bl = (BlockList) malloc(sizeof(struct etBlockList));
 	bl->block = genGenesisBlock();
 	bl->next = NULL;
+	bl->prev = NULL;
 	return bl;
 }
 
@@ -107,6 +120,7 @@ void addBlockToBlockChain(BlockChain bc, char** transactions, int nbTransactions
 	Block b = genBlock(bc->nbBlocks,nbTransactions,transactions,bc->lastBlockList->block,bc->difficulte);
 
 	bc->lastBlockList->next = genBlockList(b);
+	bc->lastBlockList->next->prev = bc->lastBlockList;
 	bc->lastBlockList = bc->lastBlockList->next;
 	++bc->nbBlocks;
 }
@@ -132,6 +146,26 @@ BlockChain genCompleteRandomBlockChain(int difficulte, int nbBlocks) {
 		addBlockToBlockChain(bc, generateRandomTransactionsList(&nbTransactions), nbTransactions);
 	}
 	return bc;
+}
+
+int blockChainToJson(BlockChain bc, char* filename) {
+	FILE* fd = fopen(filename,"w");
+	if(fd==NULL) {
+		fprintf(stderr,"Impossible d'ouvrir %s\n",filename);
+		return -1;
+	}
+
+	fprintf(fd,"{\n  \"difficulty\": %d,\n  \"nbBlocks\": %d,\n  \"BC\": [\n",bc->difficulte,bc->nbBlocks);
+
+	for(Iterator it = getIteratorFromLast(bc);!isAtStart(it);it=prev(it)) {
+		blockToJson(fd,getBlockFromIterator(it));
+		if(getIndex(getBlockFromIterator(it))!=0)
+			fprintf(fd,",\n");
+	}
+	fprintf(fd,"\n  ]\n}");
+	printf("Fichier enregistre !\n");
+	fclose(fd);
+	return 0;
 }
 
 void bougerBarreDeChargement(float avancement) {

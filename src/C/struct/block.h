@@ -30,5 +30,6 @@ void setBlockHash(Block b, int difficulte);
 int getIndex(Block b);
 void setIndex(Block b, int index);
 void setPreviousHash(Block b, Block previous);
+void blockToJson(FILE* fd, Block b);
 char **getTransactions(Block b, int *nb);
 #endif //C_BLOCK_H

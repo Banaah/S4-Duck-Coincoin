@@ -33,7 +33,9 @@ int deleteBlockFromBlockchain(BlockChain bc, int numBlock){
 
 	Iterator del = next(it);
 	iteratorSetNext(it,(next(del)));
+
  	freeBlock(getBlockFromIterator(del));
+	free(del);
 
 	if (!isFinished(it)) {
 		while(next(it) != NULL)	{

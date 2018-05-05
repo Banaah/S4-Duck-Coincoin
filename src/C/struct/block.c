@@ -15,9 +15,15 @@ struct etBlock {
 };
 
 char *genTimeStamp() {
+	char* timestamp = malloc(sizeof(char)*28);
+	struct tm date;
 	time_t curtime;
 	time(&curtime);
-	return ctime(&curtime);
+	date = *localtime(&curtime);
+
+	strftime(timestamp, sizeof(char)*26,"%b %d, %Y %X %p",&date);
+
+	return timestamp;
 }
 
 bool isMiningFinished(const char* hash, int difficulte){
@@ -171,11 +177,12 @@ void afficherBlock(Block b) {
 	for(i=0;i<b->nbTransactions;++i){
 		printf("\t\t%s\n",b->transactions[i]);
 	}
-	printf("\tTimestamp : %s\tHash precedent : %s\n\tMerkle root : %s\n\tNonce : %d\n\tHash du block : %s\n",b->timeStamp,b->previousHash,b->merkleRoot,b->nonce,b->blockHash);
+	printf("\tTimestamp : %s\n\tHash precedent : %s\n\tMerkle root : %s\n\tNonce : %d\n\tHash du block : %s\n",b->timeStamp,b->previousHash,b->merkleRoot,b->nonce,b->blockHash);
 }
 
 void freeBlock(Block b) {
 	free(b->merkleRoot);
+	free(b->timeStamp);
 	for (int i = 0; i < b->nbTransactions; ++i) {
 		free(b->transactions[i]);
 	}
@@ -209,6 +216,16 @@ void setTransactions(Block b, char **newTransactions, int nbNewTransactions){
 	free(b->transactions);
 	b->nbTransactions = nbNewTransactions;
 	b->transactions = newTransactions;
+}
+
+void blockToJson(FILE* fd, Block b) {
+	fprintf(fd,"    {\n      \"index\": %d,\n      \"previousHash\": \"%s\",\n      \"timeStamp\": \"%s\",\n      \"nbTransactions\": %d,\n      \"transactions\": [\n",b->index,b->previousHash,b->timeStamp,b->nbTransactions);
+	for(int i = 0;i < b->nbTransactions;++i) {
+		fprintf(fd,"        \"%s\"",b->transactions[i]);
+		if(i!=b->nbTransactions-1)
+			fprintf(fd,",\n");
+	}
+	fprintf(fd,"\n      ],\n      \"merkleRoot\": \"%s\",\n      \"blockHash\": \"%s\",\n      \"nonce\": %d\n    }",b->merkleRoot,b->blockHash,b->nonce);
 }
 
 int getIndex(Block b) {
