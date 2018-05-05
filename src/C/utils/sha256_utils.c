@@ -36,7 +36,7 @@ void sha256ofString(BYTE * str,char hashRes[SHA256_BLOCK_SIZE*2 + 1])
     //char hashRes[bufferSize*2 + 1];
     
 	sha256_init(&ctx);
-	sha256_update(&ctx, str, strlen(str));
+	sha256_update(&ctx, str, strlen((const char *) str));
 	sha256_final(&ctx, buf); // buf contient le hash de str
     for(int i=0;i<bufferSize;i++) {
 		sprintf(&hashRes[i*2], "%02x", buf[i]);

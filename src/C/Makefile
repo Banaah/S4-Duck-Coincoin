@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -O2
+CFLAGS=-Wall -Wextra -O2
 LDFLAGS=-lm
 EXEC=DCC
 SRC= main.c $(wildcard */*.c)
