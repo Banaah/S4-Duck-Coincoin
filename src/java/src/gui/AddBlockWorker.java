@@ -51,7 +51,7 @@ public class AddBlockWorker extends SwingWorker<BlockChain, Integer> {
     @Override
     protected BlockChain doInBackground() throws Exception {
         for (int i = 0; i < nbBlock; i++) {
-            b.addBlock(TransactionsRdGen.getTransactionsRdListLvl2());
+            b.addBlock(TransactionsRdGen.getTransactionsRdListLvl2(b));
             publish(i);
         }
         return b;
@@ -73,6 +73,7 @@ public class AddBlockWorker extends SwingWorker<BlockChain, Integer> {
      */
     @Override
     protected void done() {
+        System.out.println(b.validityCheckBC());
         jp.setValue(jp.getValue() + 1);
         if (write) BCJsonUtil.BCJsonWriter(b, path);
         jp.setValue(0);

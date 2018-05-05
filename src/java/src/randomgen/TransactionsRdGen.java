@@ -1,5 +1,6 @@
 package randomgen;
 
+import blockchain.BlockChain;
 import blockchain.transaction.Transactions;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.ECKey;
@@ -24,7 +25,7 @@ public class TransactionsRdGen {
         return tab;
     }
 
-    public static Transactions[] getTransactionsRdListLvl2() {
+    public static Transactions[] getTransactionsRdListLvl2(BlockChain b) throws Exception {
         Random rd = new Random();
         int nb = rd.nextInt(100) + 1;
         Transactions tab[] = new Transactions[nb];
@@ -35,13 +36,25 @@ public class TransactionsRdGen {
         Date curDate = new Date();
         String timestamp;
         int amount;
+        Integer index;
+        Address addressFromKey1;
+        Address addressFromKey2;
+        String publicKey;
         for (int i = 0; i < nb; i++) {
             key1 = new ECKey();
             key2 = new ECKey();
-            Address addressFromKey1 = key1.toAddress(netParams);
-            Address addressFromKey2 = key2.toAddress(netParams);
+            addressFromKey1 = key1.toAddress(netParams);
+            addressFromKey2 = key2.toAddress(netParams);
             timestamp = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss aa").format(curDate);
             amount = rd.nextInt(10000);
+            index = i + 1;
+            if (!b.getPublicKey().containsKey(addressFromKey1.toString())) {
+                b.getPublicKey().put(addressFromKey1.toString(), key1.getPublicKeyAsHex());
+            } else {
+                System.out.print("Clé déjà référencé");
+                if (b.getPublicKey().get(addressFromKey1.toString()).equals(key1.getPublicKeyAsHex()))
+                    System.out.println("true");
+            }
             tab[i] = new Transactions(i + 1,
                     addressFromKey1.toString(),
                     addressFromKey2.toString(),
@@ -51,8 +64,10 @@ public class TransactionsRdGen {
                             addressFromKey1.toString() + "," +
                             addressFromKey2.toString() + "," +
                             amount + ","
-                            + i + 1)
+                            + index)
             );
+            //System.out.println(addressFromKey1.toString()+ " "+ addressFromKey2.toString());
+            //System.out.println(tab[i].checkValidity(key1.getPublicKeyAsHex()));
         }
         return tab;
     }

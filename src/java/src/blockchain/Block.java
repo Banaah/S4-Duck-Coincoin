@@ -42,6 +42,27 @@ public class Block {
         this.blockHash = this.getHashedBlock(difficulte);//init aussi this.nonce
     }
 
+    boolean validityCheckBlock(BlockChain b) {
+        String input = this.index.toString() +
+                this.previousHash +
+                this.timeStamp +
+                this.nbTransactions.toString() +
+                this.getTransactionsString() +
+                this.merkleRoot +
+                this.nonce;
+        if (!this.blockHash.equals(applySha256(input))) return false;
+        String merkle = new MerkleRoot(this.toTransactionStringList()).getRoot();
+        if (!this.merkleRoot.equals(merkle)) return false;
+        for (ITransactions transac : this.transactions) {
+            try {
+                if (!transac.checkValidityTransaction(b)) return false;
+            } catch (Exception e) {
+                System.out.println("ici");
+            }
+        }
+        return true;
+    }
+
     private String[] toTransactionStringList() {
         String ret[] = new String[nbTransactions];
         int i = 0;
@@ -77,7 +98,12 @@ public class Block {
      * @return String of the hash of the block.
      */
     private String getHashedBlock(int difficulte){
-        String input = this.index.toString() + this.previousHash + this.timeStamp + this.nbTransactions.toString() + this.getTransactionsString() + this.merkleRoot;
+        String input = this.index.toString() +
+                this.previousHash +
+                this.timeStamp +
+                this.nbTransactions.toString() +
+                this.getTransactionsString() +
+                this.merkleRoot;
         String output;
         do{
             output = applySha256(input + this.nonce.toString());
