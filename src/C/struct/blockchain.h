@@ -15,7 +15,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <sys/stat.h>
 
+#include "../utils/json.h"
 #include "../randomgen/generate_transactions.h"
 #include "block.h"
 
@@ -25,6 +27,7 @@ typedef struct etBlockList* Iterator;
 
 Iterator getIterator(BlockChain bc);
 void iteratorSetNext(Iterator it, Iterator next);
+void iteratorSetPrevious(Iterator it, Iterator prev);
 
 Iterator next(Iterator it);
 
@@ -34,6 +37,8 @@ Block getBlockFromIterator(Iterator it);
 
 BlockChain genCompleteRandomBlockChain(int difficulte, int nbBlocks);
 BlockChain genCompleteRandomBlockChainConsole(int difficulte, int nbBlocks);
+
+void blockChainCheckStructure(BlockChain bc, Iterator it);
 
 BlockChain initBlockChain(int difficulte);
 
@@ -55,5 +60,7 @@ void setNbBlock(BlockChain bc, int nbBlocks);
 int getNbBlock(BlockChain bc);
 
 int getBlockChainDifficulty(BlockChain bc);
+
+BlockChain blockChainFromJson(char* filename);
 
 #endif //C_BLOCKCHAIN_H

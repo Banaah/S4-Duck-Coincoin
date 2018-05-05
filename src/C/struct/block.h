@@ -15,6 +15,7 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "../utils/json.h"
 #include "merkleroot.h"
 #include "../utils/sha256_utils.h"
 
@@ -32,4 +33,5 @@ void setIndex(Block b, int index);
 void setPreviousHash(Block b, Block previous);
 void blockToJson(FILE* fd, Block b);
 char **getTransactions(Block b, int *nb);
+Block blockFromJsonObject(json_value* value,Block previousBlock);
 #endif //C_BLOCK_H

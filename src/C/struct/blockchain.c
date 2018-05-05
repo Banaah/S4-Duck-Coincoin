@@ -48,19 +48,27 @@ Block getBlockFromIterator(Iterator it){
 }
 
 void iteratorSetNext(Iterator it, Iterator next){
+	if(it==NULL) return;
 	it->next = next;
 }
 
+void iteratorSetPrevious(Iterator it, Iterator prev){
+	if(it==NULL) return;
+	it->prev = prev;
+}
+
 bool isBlockChainValid(BlockChain bc) {
-	int i;
-	BlockList bl = bc->blockList;
-	for(i=0;i<bc->nbBlocks;++i) {
-		if(!isBlockValid(bl->block)) {
-			printf("Block n%d invalide\n",i);
+	Iterator it = getIterator(bc);
+	for(;!isFinished(it);it=next(it)) {
+		if(!isBlockValid(getBlockFromIterator(it))) {
+			printf("Block invalide\n");
 			return false;
 		}
-		bl = bl->next;
 	}
+	if(!isBlockValid(getBlockFromIterator(it))) {
+		printf("Block invalide\n");
+		return false;
+	} 
 	return true;
 }
 
@@ -105,7 +113,7 @@ BlockChain initBlockChain(int difficulte) {
 Block getBlockFromBlockChain(BlockChain bc, int index) {
 	int pos = 0;
 	BlockList bl = bc->blockList;
-	while(pos!=index && pos<bc->nbBlocks) {
+	while(pos!=index && pos<bc->nbBlocks-1) {
 		bl = bl->next;
 		++pos;
 	}
@@ -149,7 +157,8 @@ BlockChain genCompleteRandomBlockChain(int difficulte, int nbBlocks) {
 }
 
 int blockChainToJson(BlockChain bc, char* filename) {
-	FILE* fd = fopen(filename,"w");
+	FILE* fd = NULL;
+	fd = fopen(filename,"w");
 	if(fd==NULL) {
 		fprintf(stderr,"Impossible d'ouvrir %s\n",filename);
 		return -1;
@@ -180,7 +189,7 @@ void bougerBarreDeChargement(float avancement) {
 		}
 		++j;
 	}
-	barre[51] = (char)0;
+	barre[50] = (char)0;
 
 	printf("\r[%-50s]%d%%",barre,(int)(avancement*100));
 	fflush(stdout);
@@ -246,4 +255,74 @@ int getNbBlock(BlockChain bc){
 int getBlockChainDifficulty(BlockChain bc){
 	return bc->difficulte;
 }
+
+void blockChainCheckStructure(BlockChain bc, Iterator it) {
+	if(bc->lastBlockList == it) {
+		bc->lastBlockList = bc->lastBlockList->prev;
+	} else if (bc->blockList == it) {
+		bc->blockList = bc->blockList->next;
+	}
+}
+
+BlockChain blockChainFromJson(char* filename){
+	FILE* fd;
+	struct stat fstat;
+	char* file;
+	json_char* json;
+	json_value* value;
+	
+	if(stat(filename,&fstat)!=0) {
+		fprintf(stderr,"Fichier %s introuvable\n",filename);
+		return NULL;
+	}
+	
+	file = (char*)malloc(fstat.st_size);
+	
+	fd = fopen(filename,"r");
+	
+	if(fread(file,fstat.st_size,1,fd)==0) {
+		fprintf(stderr,"Erreur de lecture du fichier json\n");
+		return NULL;
+	}
+	fclose(fd);
+	
+	json = (json_char*)file;
+	
+	value = json_parse(json,fstat.st_size);
+
+	BlockChain bc = (BlockChain) malloc(sizeof(struct etBlockChain));
+	bc->nbBlocks = 1;
+	bc->difficulte = value->u.object.values[0].value->u.integer;
+	int len = value->u.object.values[2].value->u.array.length;
+	
+	Block b = blockFromJsonObject(value->u.object.values[2].value->u.array.values[len-1],NULL);
+	bc->lastBlockList=genBlockList(b);
+	bc->blockList=bc->lastBlockList;
+	
+	for(int i = len-2;i>=0;--i) {
+		b = blockFromJsonObject(value->u.object.values[2].value->u.array.values[i],bc->lastBlockList->block);
+		bc->lastBlockList->next=genBlockList(b);
+		bc->lastBlockList->next->prev=bc->lastBlockList;
+		bc->lastBlockList = bc->lastBlockList->next;
+		bc->nbBlocks++;
+	}
+	
+	json_value_free(value);
+	free(file);
+	
+	return bc;
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 

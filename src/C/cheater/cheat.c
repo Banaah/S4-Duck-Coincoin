@@ -28,21 +28,23 @@ int deleteBlockFromBlockchain(BlockChain bc, int numBlock){
 	}
 	float avancement;
 	int i = 0;
+	int j = 0;
 
 	setNbBlock(bc,getNbBlock(bc)-1);
 
 	Iterator it = getIterator(bc);
-	for (int i = 0; i < numBlock-1; it = next(it), ++i);
+	for (int j = 0; j < numBlock-1; it = next(it), ++j);
 
 	Iterator del = next(it);
 	iteratorSetNext(it,(next(del)));
-
+	iteratorSetPrevious(next(del),it);
+	blockChainCheckStructure(bc,del);
  	freeBlock(getBlockFromIterator(del));
 	free(del);
 
 	if (!isFinished(it)) {
 		while(next(it) != NULL)	{
-			avancement = ((float)i++)/getNbBlock(bc);
+			avancement = ((float)i++)/(getNbBlock(bc)-j);
 			bougerBarreDeChargement(avancement);
 			setIndex(getBlockFromIterator(next(it)),getIndex(getBlockFromIterator(next(it)))-1);
 			setPreviousHash(getBlockFromIterator(next(it)),getBlockFromIterator(it));
@@ -56,7 +58,6 @@ int deleteBlockFromBlockchain(BlockChain bc, int numBlock){
 
 double cheaterTransaction(BlockChain bc, int nbBlock, char **transactions, int nbTransactions){
 	clock_t start, end;
-	double cpu_time_used;
 	start = clock();
 	if (cheatBlockFromBlockchain(bc, nbBlock, transactions, nbTransactions)) return 0;
 	end = clock();
@@ -65,7 +66,6 @@ double cheaterTransaction(BlockChain bc, int nbBlock, char **transactions, int n
 
 double cheaterDeleteBlock(BlockChain bc, int nbBlock){
 	clock_t start, end;
-	double cpu_time_used;
 	start = clock();
 	if (deleteBlockFromBlockchain(bc, nbBlock)) return 0;
 	end = clock();

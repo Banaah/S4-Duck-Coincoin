@@ -15,13 +15,13 @@ struct etBlock {
 };
 
 char *genTimeStamp() {
-	char* timestamp = malloc(sizeof(char)*28);
+	char* timestamp = malloc(sizeof(char)*TIMESTAMP_SIZE);
 	struct tm date;
 	time_t curtime;
 	time(&curtime);
 	date = *localtime(&curtime);
 
-	strftime(timestamp, sizeof(char)*26,"%b %d, %Y %X %p",&date);
+	strftime(timestamp, sizeof(char)*TIMESTAMP_SIZE,"%b %d, %Y %X %p",&date);
 
 	return timestamp;
 }
@@ -123,9 +123,7 @@ bool isBlockValid (Block b) {
 	}
 	strcat(blockPreHash,b->merkleRoot);
 	strcat(blockPreHash,strNonce);
-
-	//printf("DEBUG valid :\n\t%s\n",blockPreHash);
-
+	
 	sha256ofString((BYTE *)blockPreHash,blockHash);
 
 	free(blockPreHash);
@@ -134,7 +132,6 @@ bool isBlockValid (Block b) {
 }
 
 Block genBlock(int index, int nbTransactions, char **transactions, Block previousBlock, int difficulte) {
-	int i;
 	char *timeStamp = genTimeStamp();
 
 	Block b = (Block) malloc(sizeof(struct etBlock));
@@ -144,7 +141,6 @@ Block genBlock(int index, int nbTransactions, char **transactions, Block previou
 	b->transactions = transactions;
 
 	strcpy(b->timeStamp,timeStamp);
-	// free(timeStamp);		-> fait planter, implémentation de ctime()...
 	b->merkleRoot = getMerkleRoot(transactions, nbTransactions);
 	setBlockHash(b, difficulte);
 
@@ -181,8 +177,7 @@ void afficherBlock(Block b) {
 }
 
 void freeBlock(Block b) {
-	free(b->merkleRoot);
-	free(b->timeStamp);
+	free(b->merkleRoot); 
 	for (int i = 0; i < b->nbTransactions; ++i) {
 		free(b->transactions[i]);
 	}
@@ -244,3 +239,28 @@ char **getTransactions(Block b, int *nb){
 	*nb = b->nbTransactions;
 	return b->transactions;
 }
+
+Block blockFromJsonObject(json_value* value, Block previousBlock) {
+	Block b = (Block) malloc(sizeof(struct etBlock));
+	b->index = value->u.object.values[0].value->u.integer;
+	if(previousBlock!=NULL) {
+		b->previousHash = previousBlock->blockHash;
+	} else {
+		b->previousHash = "0";
+	}
+	strcpy(b->timeStamp,value->u.object.values[2].value->u.string.ptr);
+	b->nbTransactions = value->u.object.values[3].value->u.integer;
+	b->transactions = (char**) malloc(sizeof(char*)*b->nbTransactions);
+	for(int i=0;i<b->nbTransactions;++i) {
+		b->transactions[i] = (char*) malloc(sizeof(char)*TRANSACTION_SIZE);
+		strcpy(b->transactions[i],value->u.object.values[4].value->u.array.values[i]->u.string.ptr);
+	}
+	b->merkleRoot = (char*) malloc(sizeof(char)*HASH_SIZE+1);
+	strcpy(b->merkleRoot,value->u.object.values[5].value->u.string.ptr);
+	strcpy(b->blockHash,value->u.object.values[6].value->u.string.ptr);
+	
+	b->nonce = value->u.object.values[7].value->u.integer;
+	return b;
+}
+	
+	
