@@ -301,6 +301,9 @@ BlockChain blockChainFromJson(char* filename){
 	
 	for(int i = len-2;i>=0;--i) {
 		b = blockFromJsonObject(value->u.object.values[2].value->u.array.values[i],bc->lastBlockList->block);
+		if(b == NULL) {
+			return NULL;
+		}
 		bc->lastBlockList->next=genBlockList(b);
 		bc->lastBlockList->next->prev=bc->lastBlockList;
 		bc->lastBlockList = bc->lastBlockList->next;

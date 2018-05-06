@@ -2,6 +2,7 @@
 // Created by Francois on 26/03/2018.
 //
 #include "block.h"
+#include "../utils/json.h"
 
 struct etBlock {
 	int index;
@@ -244,6 +245,10 @@ Block blockFromJsonObject(json_value* value, Block previousBlock) {
 	Block b = (Block) malloc(sizeof(struct etBlock));
 	b->index = value->u.object.values[0].value->u.integer;
 	if(previousBlock!=NULL) {
+		if(strcmp(value->u.object.values[1].value->u.string.ptr,previousBlock->blockHash)!=0) {
+			printf("Json corrompu !\n");
+			return NULL;
+		}
 		b->previousHash = previousBlock->blockHash;
 	} else {
 		b->previousHash = "0";

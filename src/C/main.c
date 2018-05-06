@@ -42,12 +42,13 @@ int main(){
 			ret = scanf("%s",input);
 			bc = blockChainFromJson(input);
 		}
-		if(bc==NULL) return -1;
+		if(bc==NULL) {
+			return -1;
+		}
 		if(!isBlockChainValid(bc)) {
 			printf("Blockchain invalide !\n");
+			freeBlockChain(bc);
 			return -1;
-		} else {
-			printf("OUI\n");
 		}
 		printf("Blockchain generee !\nCommandes :\n\t- x pour afficher le bloc x\n\t- \"bc\" pour afficher toute la blockchain\n\t- \"s\" pour supprimer un block (Cheater)\n\t- \"js\" pour enregistrer la chaine en json\n\t- \"q\" pour quitter\n");
 		ret = scanf("%s", input);
