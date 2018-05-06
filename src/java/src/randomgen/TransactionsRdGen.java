@@ -40,14 +40,16 @@ public class TransactionsRdGen {
         int index;
         int nb;
         Random rd = new Random();
-        final NetworkParameters netParams = NetworkParameters.testNet();
+        final NetworkParameters netParams = NetworkParameters.testNet();// Deprecated mais on est obligé :( .
         Transactions tab[] = new Transactions[nb = (rd.nextInt(100) + 1)];
         Date curDate = new Date();
         for (int i = 0; i < nb; i++) {
+            // Génération des 2 clé
             key1 = new ECKey();
             key2 = new ECKey();
-            addressFromKey1 = key1.toAddress(netParams);
-            addressFromKey2 = key2.toAddress(netParams);
+            //Générations Des adresses source et destination
+            addressFromKey1 = key1.toAddress(netParams);// Source
+            addressFromKey2 = key2.toAddress(netParams);//Destination
             timestamp = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss aa").format(curDate);
             amount = rd.nextInt(10000);
             index = i + 1;
@@ -65,6 +67,7 @@ public class TransactionsRdGen {
                     addressFromKey2.toString(),
                     timestamp,
                     amount,
+                    //signature de la transaction
                     key1.signMessage(timestamp + "," +
                             addressFromKey1.toString() + "," +
                             addressFromKey2.toString() + "," +
