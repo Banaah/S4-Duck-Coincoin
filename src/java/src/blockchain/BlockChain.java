@@ -13,6 +13,14 @@ public class BlockChain {
     private final ArrayList<Block> BC;
     private final HashMap<String, String> publicKey;
 
+    /**
+     * Create a BlockChain.
+     * <p>
+     * publicKey est un dictionnaire des adresse public des emetteurs avec comme clé l'adresse
+     * de a partir de laquelle la clé a etait généré
+     *
+     * @param difficulty BlockChain difficulty.
+     */
     public BlockChain(int difficulty) {
         this.difficulty = difficulty;
         this.nbBlocks = 0;
@@ -42,6 +50,11 @@ public class BlockChain {
                         this.difficulty));
     }
 
+    /**
+     * Check validity of every block.
+     *
+     * @return If Bc valid true else false
+     */
     public boolean validityCheckBC() {
         for (Block b : this.BC) {
             if (b.getIndex() != 0)

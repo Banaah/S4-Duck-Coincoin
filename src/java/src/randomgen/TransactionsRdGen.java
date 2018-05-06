@@ -25,6 +25,12 @@ public class TransactionsRdGen {
         return tab;
     }
 
+    /**
+     * Génère une liste de transaction niveau 2.
+     *
+     * @param b Blockchain pour ajouter les clé publique au dictionnaire.
+     * @return Une liste de transactions niveau 2.
+     */
     @SuppressWarnings("deprecation")
     public static Transactions[] getTransactionsRdListLvl2(BlockChain b) {
         Address addressFromKey1, addressFromKey2;
@@ -45,6 +51,8 @@ public class TransactionsRdGen {
             timestamp = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss aa").format(curDate);
             amount = rd.nextInt(10000);
             index = i + 1;
+            //Ajoute la clé publique dans un dictionnaire avec comme clé l'adresse
+            // à partir de laquelle elle a était généré
             if (!b.getPublicKey().containsKey(addressFromKey1.toString())) {
                 b.getPublicKey().put(addressFromKey1.toString(), key1.getPublicKeyAsHex());
             } else {

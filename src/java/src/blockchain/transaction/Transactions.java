@@ -20,6 +20,13 @@ public class Transactions implements ITransactions {
         this.signature = signature;
     }
 
+    /**
+     * Check Validity of Transactions.
+     *
+     * @param b BlockChain to get correspondance of publicKey and Address.
+     * @return True if address and key match else false.
+     * @throws Exception ECKey get public key exception.
+     */
     public boolean checkValidityTransaction(BlockChain b) throws Exception {
         ECKey keyFromSign = ECKey.signedMessageToKey(timeStamp + "," +
                         emetteur + "," +
@@ -33,6 +40,10 @@ public class Transactions implements ITransactions {
     }
 
 
+    /**
+     * Redefinition of toString(); .
+     * @return A string with few attributes.
+     */
     public String toString() {
         return timeStamp + "," +
                 emetteur + "," +

@@ -43,6 +43,12 @@ class Block {
         this.blockHash = this.getHashedBlock(difficulte);//init aussi this.nonce
     }
 
+    /**
+     * Check every sensitive field of the blockchain.
+     *
+     * @param b BlockChain to verify correspondance of public key & Address.
+     * @return true if valid else false.
+     */
     boolean validityCheckBlock(BlockChain b) {
         String input = this.index.toString() +
                 this.previousHash +
@@ -64,6 +70,10 @@ class Block {
         return true;
     }
 
+    /**
+     * Convert a Transaction[] into String[],
+     * @return String[] version of this.transactions.
+     */
     private String[] toTransactionStringList() {
         String ret[] = new String[nbTransactions];
         int i = 0;
