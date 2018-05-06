@@ -4,13 +4,9 @@ import blockchain.BlockChain;
 import projectutils.BCJsonUtil;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class ChargerBlockC {
-    BlockChain b;
+class ChargerBlockC {
+    private BlockChain b;
 
     private JPanel charger;
     private JPanel core;
@@ -31,55 +27,56 @@ public class ChargerBlockC {
     private JProgressBar ajoutBlockPgb;
 
     ChargerBlockC() {
-        ouvrirBouton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                b = BCJsonUtil.BCJsonReader(affiFichier.getText());
+
+        ouvrirBouton.addActionListener(e -> {
+            b = BCJsonUtil.BCJsonReader(affiFichier.getText());
+            if (b == null) {
+                JOptionPane.showMessageDialog(null,
+                        "BlockChain non-valide",
+                        "Alerte",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else if (b.validityCheckBC()) {
                 addBlock.setEnabled(true);
                 ecrireJson.setEnabled(true);
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "BlockChain altéré",
+                        "Alerte",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
         });
-        ecrireJson.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                BCJsonUtil.BCJsonWriter(b, affiFichier.getText());
-                addBlock.setEnabled(false);
-                ecrireJson.setEnabled(false);
+
+        ecrireJson.addActionListener(e -> {
+            BCJsonUtil.BCJsonWriter(b, affiFichier.getText());
+            addBlock.setEnabled(false);
+            ecrireJson.setEnabled(false);
+        });
+
+        addBlock.addActionListener(e -> {
+            ajoutBlockPgb.setStringPainted(true);
+            ajoutBlockPgb.setMaximum((int) spinnernb.getValue());
+            AddBlockWorker w = new AddBlockWorker(b, (int) spinnernb.getValue(), ajoutBlockPgb);
+            w.execute();
+            ajoutBlockPgb.setValue(0);
+        });
+
+        spinnernb.addChangeListener(e -> {
+            if ((int) spinnernb.getValue() > 99) {
+                spinnernb.setValue(0);
+            }
+            if ((int) spinnernb.getValue() < 0) {
+                spinnernb.setValue(99);
             }
         });
-        addBlock.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //TODO à tester
-                ajoutBlockPgb.setStringPainted(true);
-                ajoutBlockPgb.setMaximum((int) spinnernb.getValue());
-                AddBlockWorker w = new AddBlockWorker(b, (int) spinnernb.getValue(), ajoutBlockPgb);
-                w.execute();
-                ajoutBlockPgb.setValue(0);
-            }
-        });
-        spinnernb.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                if ((int) spinnernb.getValue() > 99) {
-                    spinnernb.setValue(0);
-                }
-                if ((int) spinnernb.getValue() < 0) {
-                    spinnernb.setValue(99);
-                }
-            }
-        });
-        choisirButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser dialogue = new JFileChooser();
-                dialogue.showOpenDialog(null);
-                affiFichier.setText(dialogue.getSelectedFile().toString());
-            }
+
+        choisirButton.addActionListener(e -> {
+            JFileChooser dialogue = new JFileChooser();
+            dialogue.showOpenDialog(null);
+            affiFichier.setText(dialogue.getSelectedFile().toString());
         });
     }
 
-    public JPanel getCharger() {
+    JPanel getCharger() {
         return charger;
     }
 }

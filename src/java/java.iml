@@ -16,5 +16,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="bitcoinj-core-0.14.5-bundled" level="project" />
   </component>
 </module>

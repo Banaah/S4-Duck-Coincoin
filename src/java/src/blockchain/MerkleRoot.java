@@ -6,13 +6,20 @@ import java.util.Arrays;
 import static projectutils.HashUtil.applySha256;
 
 class MerkleRoot {
-    private ArrayList<String> listePrep;
+    private final ArrayList<String> listePrep;
     private String root;
-    private int nb;
+    private final int nb;
 
+    /**
+     * Iterative computation of the merkle tree.
+     *
+     * @param transactions transactions to compute in the tree.
+     */
     MerkleRoot(String transactions[]) {
         this.root = "Null";
-        int nb = transactions.length > 1 ? (Integer.highestOneBit(transactions.length - 1) << 1) : 1;
+        int nb = transactions.length > 1 ?
+                (Integer.highestOneBit(transactions.length - 1) << 1) :
+                1;
         this.nb = nb;
         listePrep = new ArrayList<>(Arrays.asList(transactions));
         if (transactions.length != nb) {
@@ -30,6 +37,12 @@ class MerkleRoot {
         //System.out.println(this.listePrep + "\n" + this.nb + " " + this.listePrep.size());
     }
 
+    /**
+     * Find root in computed merkle tree.
+     * @param nb Number of Block.
+     * @param deb Index of beginning in the list.
+     * @return root of the tree.
+     */
     private String computeRoot(int nb, int deb) {
 
         if (nb == 1) {
@@ -45,6 +58,10 @@ class MerkleRoot {
         return this.root;
     }
 
+    /**
+     * Apply root to this.root if not already done.
+     * @return this.root.
+     */
     String getRoot() {
         if (this.root.equals("Null")) {
             this.root = this.computeRoot(this.nb, 0);
