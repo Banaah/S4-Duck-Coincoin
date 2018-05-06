@@ -4,6 +4,9 @@
 
 #include "cheat.h"
 
+/*
+ * Change les transactions d'un block et conserve la validite de la chaine
+ */
 int cheatBlockFromBlockchain(BlockChain bc, int numBlock, char **transactions, int nbTransactions){
 	if (numBlock < 1 || numBlock > getNbBlock(bc)) {
 		fprintf(stderr, "erreur nb bloc");
@@ -21,6 +24,9 @@ int cheatBlockFromBlockchain(BlockChain bc, int numBlock, char **transactions, i
 	return 0;
 }
 
+/*
+ * Supprime un block de la bc et conserve la validite de la chaine
+ */
 int deleteBlockFromBlockchain(BlockChain bc, int numBlock){
 	if (numBlock < 1 || numBlock > getNbBlock(bc)) {
 		fprintf(stderr, "erreur nb bloc");
@@ -33,7 +39,7 @@ int deleteBlockFromBlockchain(BlockChain bc, int numBlock){
 	setNbBlock(bc,getNbBlock(bc)-1);
 
 	Iterator it = getIterator(bc);
-	for (int j = 0; j < numBlock-1; it = next(it), ++j);
+	for (j = 0; j < numBlock-1; it = next(it), ++j);
 
 	Iterator del = next(it);
 	iteratorSetNext(it,(next(del)));
@@ -56,6 +62,9 @@ int deleteBlockFromBlockchain(BlockChain bc, int numBlock){
 	return 0;
 }
 
+/*
+ * Modifie les transactions d'un bloc et mesure le temps d'execution
+ */
 double cheaterTransaction(BlockChain bc, int nbBlock, char **transactions, int nbTransactions){
 	clock_t start, end;
 	start = clock();
@@ -64,6 +73,9 @@ double cheaterTransaction(BlockChain bc, int nbBlock, char **transactions, int n
 	return (double) (end - start) / CLOCKS_PER_SEC;
 }
 
+/*
+ * supprime un bloc et mesure le temps d'execution
+ */
 double cheaterDeleteBlock(BlockChain bc, int nbBlock){
 	clock_t start, end;
 	start = clock();

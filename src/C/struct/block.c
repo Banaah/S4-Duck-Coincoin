@@ -4,6 +4,9 @@
 #include "block.h"
 #include "../utils/json.h"
 
+/*
+ * Structure du block, previousHash pointe sur le hash du bloc précédent
+ */
 struct etBlock {
 	int index;
 	int nbTransactions;
@@ -11,10 +14,13 @@ struct etBlock {
 	char** transactions;
 	char timeStamp[TIMESTAMP_SIZE + 1];
 	char* previousHash;
-	char *merkleRoot;
+	char* merkleRoot;
 	char blockHash[HASH_SIZE + 1];
 };
 
+/*
+ * Genere une chaine de date au format (Mois Jour, Année Heure AM/PM)
+ */
 char *genTimeStamp() {
 	char* timestamp = malloc(sizeof(char)*TIMESTAMP_SIZE);
 	struct tm date;
@@ -34,6 +40,9 @@ bool isMiningFinished(const char* hash, int difficulte){
 	return true;
 }
 
+/*
+ * Hash le block, initialise les champs blockHash et nonce
+ */
 void setBlockHash(Block b, int difficulte){
 	int i;
 	int tailleConcat = 5 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 10;
@@ -55,8 +64,6 @@ void setBlockHash(Block b, int difficulte){
 		return;
 	}
 
-	//printf("DEBUG : \n\tindex : %s\n\tnbTransactions : %s\n",strIndex,strNbTransactions); // DEBUG
-
 	strcpy(blockConcat,strIndex);
 	strcat(blockConcat,b->previousHash);
 	strcat(blockConcat,b->timeStamp);
@@ -75,8 +82,6 @@ void setBlockHash(Block b, int difficulte){
 			return;
 		}
 
-		// printf("DEBUG : \n\tnonce : %s\n",strNonce); DEBUG
-
 		blockConcat[taille] = (char) 0;
 		strcat(blockConcat,strNonce);
 
@@ -86,12 +91,12 @@ void setBlockHash(Block b, int difficulte){
 	strcpy(b->blockHash, blockHash);
 	b->nonce = --nonce;
 
-	//printf("DEBUG :\n\t%s\n",blockConcat);
-
 	free(blockConcat);
 }
 
-
+/*
+ * re-hash les champs du block et les compare au hash contenu dans le block
+ */
 bool isBlockValid (Block b) {
 	int i;
 
@@ -132,6 +137,9 @@ bool isBlockValid (Block b) {
 	return strcmp(b->blockHash,blockHash) == 0;
 }
 
+/*
+ * Genere un block complet pour les transactions données
+ */
 Block genBlock(int index, int nbTransactions, char **transactions, Block previousBlock, int difficulte) {
 	char *timeStamp = genTimeStamp();
 
@@ -148,6 +156,9 @@ Block genBlock(int index, int nbTransactions, char **transactions, Block previou
 	return b;
 }
 
+/*
+ * Genere le block genesis
+ */
 Block genGenesisBlock() {
 	char tr[] = "genesis block";
 	char *timeStamp = genTimeStamp();
@@ -167,6 +178,9 @@ Block genGenesisBlock() {
 	return b;
 }
 
+/*
+ * Affiche le block donne en console
+ */
 void afficherBlock(Block b) {
 	int i = 0;
 
@@ -177,6 +191,10 @@ void afficherBlock(Block b) {
 	printf("\tTimestamp : %s\n\tHash precedent : %s\n\tMerkle root : %s\n\tNonce : %d\n\tHash du block : %s\n",b->timeStamp,b->previousHash,b->merkleRoot,b->nonce,b->blockHash);
 }
 
+/*
+ * Libere les champs du block
+ * Le timeStamp ne peut pas être libéré -> fuite
+ */
 void freeBlock(Block b) {
 	free(b->merkleRoot); 
 	for (int i = 0; i < b->nbTransactions; ++i) {
@@ -205,6 +223,9 @@ char *getBlockHashFromBlock(Block b) {
 	return b->blockHash;
 };
 
+/*
+ * Changer les transactions d'un block (Cheater)
+ */
 void setTransactions(Block b, char **newTransactions, int nbNewTransactions){
 	for (int i = 0; i < b->nbTransactions; ++i) {
 		free(b->transactions[i]);
@@ -214,6 +235,9 @@ void setTransactions(Block b, char **newTransactions, int nbNewTransactions){
 	b->transactions = newTransactions;
 }
 
+/*
+ * Ecrit un block au format Json de l'exmple dansle fichier donné
+ */
 void blockToJson(FILE* fd, Block b) {
 	fprintf(fd,"    {\n      \"index\": %d,\n      \"previousHash\": \"%s\",\n      \"timeStamp\": \"%s\",\n      \"nbTransactions\": %d,\n      \"transactions\": [\n",b->index,b->previousHash,b->timeStamp,b->nbTransactions);
 	for(int i = 0;i < b->nbTransactions;++i) {
@@ -241,11 +265,16 @@ char **getTransactions(Block b, int *nb){
 	return b->transactions;
 }
 
+/*
+ * Génère un block depuis un objet json parse avant.
+ * Necessite un objet au bon format
+ */
 Block blockFromJsonObject(json_value* value, Block previousBlock) {
 	Block b = (Block) malloc(sizeof(struct etBlock));
 	b->index = value->u.object.values[0].value->u.integer;
 	if(previousBlock!=NULL) {
 		if(strcmp(value->u.object.values[1].value->u.string.ptr,previousBlock->blockHash)!=0) {
+			/*Vérifie que le champ previousHash reste cohérent*/
 			printf("Json corrompu !\n");
 			return NULL;
 		}

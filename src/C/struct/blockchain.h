@@ -20,47 +20,49 @@
 #include "../utils/json.h"
 #include "../randomgen/generate_transactions.h"
 #include "block.h"
+/* -------------------------- STRUCTURE --------------------------- */
 
 typedef struct etBlockChain *BlockChain;
-
 typedef struct etBlockList* Iterator;
 
+/* ---------------------------------------------------------------- */
+/* -------------------------- ITERATEUR --------------------------- */
+
 Iterator getIterator(BlockChain bc);
-void iteratorSetNext(Iterator it, Iterator next);
-void iteratorSetPrevious(Iterator it, Iterator prev);
-
 Iterator next(Iterator it);
-
 bool isFinished(Iterator it);
-
 Block getBlockFromIterator(Iterator it);
+
+/* ---------------------------------------------------------------- */
+/* -------------------------- GENERATION -------------------------- */
 
 BlockChain genCompleteRandomBlockChain(int difficulte, int nbBlocks);
 BlockChain genCompleteRandomBlockChainConsole(int difficulte, int nbBlocks);
 
+/* ---------------------------------------------------------------- */
+/* -------------------------- CHEATER ----------------------------- */
+
+void iteratorSetNext(Iterator it, Iterator next);
+void iteratorSetPrevious(Iterator it, Iterator prev);
 void blockChainCheckStructure(BlockChain bc, Iterator it);
 
-BlockChain initBlockChain(int difficulte);
-
-void addBlockToBlockChain(BlockChain bc, char** transactions, int nbTransactions);
-
-Block getBlockFromBlockChain(BlockChain bc, int index);
-
-bool isBlockChainValid(BlockChain bc);
-
-void afficherBlockChain(BlockChain bc);
-
-void freeBlockChain(BlockChain bc);
-
-int blockChainToJson(BlockChain bc, char* filename);
-void bougerBarreDeChargement(float avancement);
-
-void setNbBlock(BlockChain bc, int nbBlocks);
-
-int getNbBlock(BlockChain bc);
-
-int getBlockChainDifficulty(BlockChain bc);
+/* ---------------------------------------------------------------- */
+/* -------------------------- JSON -------------------------------- */
 
 BlockChain blockChainFromJson(char* filename);
+int blockChainToJson(BlockChain bc, char* filename);
 
+/* ---------------------------------------------------------------- */
+/* -------------------------- UTILS ------------------------------- */
+
+Block getBlockFromBlockChain(BlockChain bc, int index);
+bool isBlockChainValid(BlockChain bc);
+void afficherBlockChain(BlockChain bc);
+void freeBlockChain(BlockChain bc);
+void bougerBarreDeChargement(float avancement);
+void setNbBlock(BlockChain bc, int nbBlocks);
+int getNbBlock(BlockChain bc);
+int getBlockChainDifficulty(BlockChain bc);
+
+/* ---------------------------------------------------------------- */
 #endif //C_BLOCKCHAIN_H

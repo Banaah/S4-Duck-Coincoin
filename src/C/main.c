@@ -15,7 +15,7 @@ int main(){
 
 	ret = system("clear");
 	printf("Bienvenue dans l'implementation du DuckCoinCoin par la Team Belette !\n\t\tQuentin Nouvel\tFrancois Gaits\tLeo Guimas\n");
-	printf("Generer une blockchain :\n\t1- Aleatoire\n\t2- Depuis un fichier Json ? [1/2/n]\n");
+	printf("Generer une blockchain :\n\t1- Aleatoire\n\t2- Depuis un fichier Json ? \n\n\t(1/2/q) : ");
 	ret = scanf("%s", input);
 	if(input[0] == '1' || input[0] == '2') {
 		if(input[0] == '1') {
@@ -61,7 +61,7 @@ int main(){
 				printf("Numero du block a supprimer : ");
 				ret = scanf("%s", input);
 				indice = atoi(input);
-				while (indice <= 0) {
+				while (indice <= 0 || indice >= getNbBlock(bc)) {
 					printf("Saisie invalide, ressaisir : ");
 					ret = scanf("%s", input);
 					indice = atoi(input);
@@ -86,14 +86,6 @@ int main(){
 
 		freeBlockChain(bc);
 	}
-		
 
-	/*BlockChain bc = genCompleteRandomBlockChain(5,12);
-	afficherBlockChain(bc);
-	int nbTransaction;
-	double temp_cheat = cheater(bc, 2, generateRandomTransactionsList(&nbTransaction), nbTransaction);
-	afficherBlockChain(bc);
-	printf("%lf", temp_cheat);
-	freeBlockChain(bc);*/
 	return 0;
 }

@@ -19,19 +19,38 @@
 #include "merkleroot.h"
 #include "../utils/sha256_utils.h"
 
+/* -------------------------- STRUCTURE --------------------------- */
+
 typedef struct etBlock *Block;
 
-bool isBlockValid(Block b);
+/* ---------------------------------------------------------------- */
+/* -------------------------- GENERATION -------------------------- */
+
 Block genBlock(int index, int nbTransactions, char **transactions, Block previousBlock, int difficulte);
 Block genGenesisBlock();
-void afficherBlock(Block b);
-void freeBlock(Block b);
-void setTransactions(Block b, char **newTransactions, int nbNewTransactions);
 void setBlockHash(Block b, int difficulte);
-int getIndex(Block b);
+
+/* ---------------------------------------------------------------- */
+/* --------------------------- CHEATER ---------------------------- */
+
+void setTransactions(Block b, char **newTransactions, int nbNewTransactions);
 void setIndex(Block b, int index);
 void setPreviousHash(Block b, Block previous);
+
+/* ---------------------------------------------------------------- */
+/* ---------------------------- JSON ------------------------------ */
+
 void blockToJson(FILE* fd, Block b);
-char **getTransactions(Block b, int *nb);
 Block blockFromJsonObject(json_value* value,Block previousBlock);
+
+/* ---------------------------------------------------------------- */
+/* ---------------------------- UTILS ----------------------------- */
+
+void afficherBlock(Block b);
+void freeBlock(Block b);
+char **getTransactions(Block b, int *nb);
+bool isBlockValid(Block b);
+int getIndex(Block b);
+
+/* ---------------------------------------------------------------- */
 #endif //C_BLOCK_H
