@@ -28,7 +28,12 @@ public class BlockChain {
         publicKey = new HashMap<>();
         Transactions transactions[] = new Transactions[1];
         Date curDate = new Date();
-        transactions[0] = new Transactions(0, "genesis", "block", new SimpleDateFormat("MMM dd, yyyy HH:mm:ss aa").format(curDate), 0, "");
+        transactions[0] = new Transactions(0,
+                "genesis",
+                "block",
+                new SimpleDateFormat("MMM dd, yyyy HH:mm:ss aa").format(curDate),
+                0,
+                "");
         this.BC.add(new Block(this.nbBlocks++,
                 "0",
                 1,

@@ -17,7 +17,9 @@ class MerkleRoot {
      */
     MerkleRoot(String transactions[]) {
         this.root = "Null";
-        int nb = transactions.length > 1 ? (Integer.highestOneBit(transactions.length - 1) << 1) : 1;
+        int nb = transactions.length > 1 ?
+                (Integer.highestOneBit(transactions.length - 1) << 1) :
+                1;
         this.nb = nb;
         listePrep = new ArrayList<>(Arrays.asList(transactions));
         if (transactions.length != nb) {

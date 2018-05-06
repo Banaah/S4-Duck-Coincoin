@@ -31,12 +31,18 @@ class ChargerBlockC {
         ouvrirBouton.addActionListener(e -> {
             b = BCJsonUtil.BCJsonReader(affiFichier.getText());
             if (b == null) {
-                JOptionPane.showMessageDialog(null, "BlockChain non-valide", "Alerte", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null,
+                        "BlockChain non-valide",
+                        "Alerte",
+                        JOptionPane.INFORMATION_MESSAGE);
             } else if (b.validityCheckBC()) {
                 addBlock.setEnabled(true);
                 ecrireJson.setEnabled(true);
             } else {
-                JOptionPane.showMessageDialog(null, "BlockChain altéré", "Alerte", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null,
+                        "BlockChain altéré",
+                        "Alerte",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
         });
 

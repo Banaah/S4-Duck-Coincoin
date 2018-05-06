@@ -11,7 +11,12 @@ public class Transactions implements ITransactions {
     private final int montant;
     private final String signature;
 
-    public Transactions(int index, String emetteur, String destinataire, String timeStamp, int montant, String signature) {
+    public Transactions(int index,
+                        String emetteur,
+                        String destinataire,
+                        String timeStamp,
+                        int montant,
+                        String signature) {
         this.index = index;
         this.emetteur = emetteur;
         this.destinataire = destinataire;

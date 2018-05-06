@@ -31,7 +31,11 @@ class Block {
      * @param transactions   list of transactions.
      * @param difficulte     Number of 0 to have at the beginning of blockHash.
      */
-    public Block(Integer index, String previousHash, Integer nbTransactions, Transactions[] transactions, int difficulte) {
+    public Block(Integer index,
+                 String previousHash,
+                 Integer nbTransactions,
+                 Transactions[] transactions,
+                 int difficulte) {
         this.index = index;
         Date curDate = new Date();
         this.timeStamp = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss aa").format(curDate);
