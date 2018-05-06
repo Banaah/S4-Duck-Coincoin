@@ -44,7 +44,7 @@ public class TransactionsRdGen {
         Transactions tab[] = new Transactions[nb = (rd.nextInt(100) + 1)];
         Date curDate = new Date();
         for (int i = 0; i < nb; i++) {
-            // Génération des 2 clé
+            // Génération des 2 clés
             key1 = new ECKey();
             key2 = new ECKey();
             //Générations Des adresses source et destination
@@ -54,7 +54,7 @@ public class TransactionsRdGen {
             amount = rd.nextInt(10000);
             index = i + 1;
             //Ajoute la clé publique dans un dictionnaire avec comme clé l'adresse
-            // à partir de laquelle elle a était généré
+            // à partir de laquelle elle a été générée
             if (!b.getPublicKey().containsKey(addressFromKey1.toString())) {
                 b.getPublicKey().put(addressFromKey1.toString(), key1.getPublicKeyAsHex());
             } else {

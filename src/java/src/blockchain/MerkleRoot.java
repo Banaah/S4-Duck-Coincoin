@@ -34,7 +34,6 @@ class MerkleRoot {
                 }
             }
         }
-        //System.out.println(this.listePrep + "\n" + this.nb + " " + this.listePrep.size());
     }
 
     /**

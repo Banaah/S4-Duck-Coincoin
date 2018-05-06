@@ -16,8 +16,8 @@ public class BlockChain {
     /**
      * Create a BlockChain.
      * <p>
-     * publicKey est un dictionnaire des adresse public des emetteurs avec comme clé l'adresse
-     * de a partir de laquelle la clé a etait généré
+     * publicKey est un dictionnaire des adresses publiques des emetteurs
+     * avec comme clé l'adresse à partir de laquelle la clé a été générée
      *
      * @param difficulty BlockChain difficulty.
      */

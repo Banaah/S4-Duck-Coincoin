@@ -39,7 +39,6 @@ public class Transactions implements ITransactions {
                         montant + ","
                         + index,
                 this.signature);
-        //System.out.println(emetteur+" "+destinataire);
         return keyFromSign.getPublicKeyAsHex().equals(b.getPublicKey().get(this.emetteur));
         //Check if all atribute concatanate is the right signature
     }

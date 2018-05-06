@@ -128,7 +128,7 @@ class Block {
         return output;
     }
 
-    /* Tous les getter, pas de setter puisqu'un block ne peut pas être modifié sans modifié tous les suivant*/
+    /* Tous les getter, pas de setter puisqu'un block ne peut pas être modifié sans modifier tous les suivants*/
 
     Integer getIndex() {
         return index;
