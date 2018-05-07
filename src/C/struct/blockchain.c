@@ -82,12 +82,14 @@ void iteratorSetPrevious(Iterator it, Iterator prev){
  * Verifie la validité de l'ensemble de la blockChain
  */
 bool isBlockChainValid(BlockChain bc) {
+	int i = 0;
 	Iterator it = getIterator(bc);
 	for(;!isFinished(it);it=next(it)) {
 		if(!isBlockValid(getBlockFromIterator(it))) {
-			printf("Block invalide\n");
+			printf("Block %d invalide\n",i);
 			return false;
 		}
+		i++;
 	}
 	if(!isBlockValid(getBlockFromIterator(it))) {
 		printf("Block invalide\n");

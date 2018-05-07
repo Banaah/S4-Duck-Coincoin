@@ -47,13 +47,13 @@ bool isMiningFinished(const char* hash, int difficulte){
  */
 void setBlockHash(Block b, int difficulte){
 	int i;
-	int tailleConcat = 5 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 10;
+	int tailleConcat = 5 + HASH_SIZE + TIMESTAMP_SIZE + 4 +  (1+TRANSACTION_SIZE)*b->nbTransactions + HASH_SIZE + 10;
 	//On reserve la mémoire pour, dans l'ordre : l'index [0-999], le hash précédent, le timestamp, le nbTransaction [0-999], les transactions, la merkle root, la nonce [0-9 999 999], et le '/0'.
 	char blockHash[HASH_SIZE + 1];
 	char* blockConcat = (char *) malloc(sizeof(char)*(tailleConcat + 1));
 	//La meme mais sans la nonce
 	char strIndex[5];
-	char strNbTransactions[3];
+	char strNbTransactions[4];
 	char strNonce[10];
 
 	if (sprintf(strIndex,"%d",b->index) < 0) {
@@ -70,6 +70,8 @@ void setBlockHash(Block b, int difficulte){
 	strcat(blockConcat,strNbTransactions);
 	for(i=0;i<b->nbTransactions;++i) {
 		strcat(blockConcat,b->transactions[i]);
+		if(i!=b->nbTransactions-1)
+			strcat(blockConcat," ");
 	}
 	strcat(blockConcat,b->merkleRoot);
 
@@ -98,11 +100,11 @@ void setBlockHash(Block b, int difficulte){
 bool isBlockValid (Block b) {
 	int i;
 
-	char* blockPreHash = (char *) malloc(sizeof(char)*(5 + HASH_SIZE + TIMESTAMP_SIZE + 3 +  TRANSACTION_SIZE*b->nbTransactions + HASH_SIZE + 7 + 1));
+	char* blockPreHash = (char *) malloc(sizeof(char)*(5 + HASH_SIZE + TIMESTAMP_SIZE + 4 +  (1+TRANSACTION_SIZE)*b->nbTransactions + HASH_SIZE + 7 + 1));
 	char blockHash[HASH_SIZE + 1];
 
 	char strIndex[5];
-	char strNbTransactions[3];
+	char strNbTransactions[4];
 	char strNonce[7];
 
 	if (sprintf(strIndex,"%d",b->index) < 0) {
@@ -124,10 +126,12 @@ bool isBlockValid (Block b) {
 	strcat(blockPreHash,strNbTransactions);
 	for(i=0;i<b->nbTransactions;++i) {
 		strcat(blockPreHash,b->transactions[i]);
+		if(i!=b->nbTransactions-1)
+			strcat(blockPreHash," ");
 	}
 	strcat(blockPreHash,b->merkleRoot);
 	strcat(blockPreHash,strNonce);
-
+	
 	sha256ofString((BYTE *)blockPreHash,blockHash);
 
 	free(blockPreHash);
