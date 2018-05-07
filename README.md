@@ -4,7 +4,7 @@
 ![img](http://master-eea.univ-tlse3.fr/wp-content/uploads/2016/08/UT3_PRES_logoQ-sans-blanc.jpg)
 <p style="text-align:center"> François Gaits | Quentin Nouvel | Léo Guimas</p>
 
-## Travail effectuer :
+## Travail effectué :
 #### - C Niveau 1  BlockChain/Cheater,
 #### - C Niveau 2 Lecture/écriture Json,
 Avec lecture de json généré par Niveau 1 Java et vérificateur d'intégrité de la BlockChain
