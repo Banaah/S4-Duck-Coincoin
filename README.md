@@ -2,7 +2,7 @@
 # Projet S4 DuckCoinCoin Team Belette
 
 ![img](http://master-eea.univ-tlse3.fr/wp-content/uploads/2016/08/UT3_PRES_logoQ-sans-blanc.jpg)
-<p style="text-align:center"> François Gaits | Quentin Nouvel | Léo Guimas</p>
+<p style="text-align:center"> François Gaits | :shipit: Quentin Nouvel | Léo Guimas</p>
 
 ## Travail effectué :
 #### - C Niveau 1  BlockChain/Cheater,
